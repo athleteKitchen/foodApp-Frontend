@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "nutritious-food",
+    "slug": "nutritious-food-zuholqdhoeedcjfavaap",
+    "version": "1.0.0",
+    "scheme": "com.fitness.nutritiousfood",
+    "platforms": ["ios", "android"],
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f5f5f5"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fitness.nutritiousfood"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#f5f5f5"
+      },
+      "package": "com.fitness.nutritiousfood"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf"
+          ]
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4662eb92-63bf-4221-ba6f-c6d7d55d6a8a"
+      },
+      "googleClientIdAndroid": "467819170767-is6r8jjmqt78a9pume9bb63i71ss4ort.apps.googleusercontent.com",
+      "googleClientIdIOS": "467819170767-m3n609kmebkr8cc57umlie9rqv53d3n3.apps.googleusercontent.com"
+    },
+    "owner": "athleteUser"
+  }
+}
