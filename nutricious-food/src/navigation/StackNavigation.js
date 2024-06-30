@@ -49,7 +49,7 @@ const StackNavigation = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={isLoggedInValue === "true" ? "Home" : "FTScreenOne"}
-        // initialRouteName="Otp"
+        // initialRouteName="ResetPassword"
         screenOptions={{
           headerShown: false,
           contentStyle: styles.screenContent,
