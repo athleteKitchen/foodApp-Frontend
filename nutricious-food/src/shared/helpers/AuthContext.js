@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [message, setMessage] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
   const [phone, setPhone] = useState(0);
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const loadStorageData = async () => {
@@ -162,7 +163,92 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const otpVerification = async () => {};
+  const updatePassword = async (data) => {
+    try {
+      const response = await api.post("/auth/email/update/password", data);
+      const { message } = response.data;
+      if (message) {
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: message,
+        });
+        setEmail("");
+        return { status: "success" };
+      }
+      // return { status: "failed" };
+    } catch (error) {
+      setMessage(error.response.data.error.message);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.response.data.error.message || message || "An error occurred",
+      });
+      return { status: "failed" };
+    }
+  };
+
+  const forgotPasswordRequest = async (email) => {
+    try {
+      setEmail(email);
+      const response = await api.post("/auth/email/request/password", {
+        email: email,
+      });
+      const { message } = response.data;
+      if (message) {
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: message,
+        });
+        return { status: "success" };
+      }
+      return { status: "failed" };
+    } catch (error) {
+      setMessage(error.response.data.error.message);
+      if (error) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: message,
+        });
+      }
+      setLoading(false);
+      return {
+        message: error.response.data.error.message,
+      };
+    }
+  };
+
+  const forgotPasswordVerify = async (data) => {
+    try {
+      // setEmail(email);
+      const response = await api.post("/auth/email/verify/password", data);
+      const { message } = response.data;
+      if (message) {
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: message,
+        });
+        return { status: "success" };
+      }
+      return { status: "failed" };
+    } catch (error) {
+      setMessage(error.response.data.error.message);
+      if (error) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: message,
+        });
+      }
+      setLoading(false);
+      return {
+        message: error.response.data.error.message,
+      };
+    }
+  };
 
   const refreshToken = async () => {
     try {
@@ -182,22 +268,28 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const otpVerification = async () => {}
+
   return (
     <>
       <AuthContext.Provider
         value={{
           user,
           loading,
+          userInfo,
+          phone,
+          email,
           register,
           login,
           logout,
           refreshToken,
-          userInfo,
           fetchUserInfoFromFacebook,
           fetchUserInfoFromGoogle,
           otpRequest,
           otpVerification,
-          phone,
+          forgotPasswordRequest,
+          forgotPasswordVerify,
+          updatePassword
         }}
       >
         {children}

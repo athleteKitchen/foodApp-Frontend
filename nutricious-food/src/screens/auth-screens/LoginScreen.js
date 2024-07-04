@@ -56,7 +56,11 @@ const LoginScreen = () => {
   const handleForgotPassword = async () => {
     navigation.navigate("ForgotPassword");
   };
-  
+
+  const handleNoAccount = () => [
+    navigation.navigate("Register")
+  ]
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -115,6 +119,10 @@ const LoginScreen = () => {
             style={styles.signInButton}
           />
 
+          <Pressable onPress={handleNoAccount}>
+            <Text style={[styles.forgotPasswordText, styles.noAccountText]}>Don't have an Account? Sign Up</Text>
+          </Pressable>
+
           {/* <View style={styles.horizontalLineContainer}>
             <View style={styles.horizontalLine}></View>
             <Text style={styles.orText}>or</Text>
@@ -160,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: hp(10)
+    marginTop: hp(10),
   },
   image: {
     width: wp(70),
@@ -190,7 +198,10 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     textAlign: "center",
     marginBottom: hp(2),
-    color: "blue",
+    color: "#6f6f71",
+  },
+  noAccountText: {
+    marginTop: hp(2)
   },
   signInButton: {
     marginBottom: hp(2),
