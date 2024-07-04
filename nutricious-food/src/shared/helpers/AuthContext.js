@@ -8,13 +8,14 @@ import {
   getTokens,
 } from "../configs/AxiosConfig";
 import Toast from "react-native-toast-message";
+import { measure } from "react-native-reanimated";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState(true);
+  const [message, setMessage] = useState("");
   const [userInfo, setUserInfo] = useState(null);
   const [phone, setPhone] = useState(0);
   const [email, setEmail] = useState("");
@@ -61,18 +62,18 @@ export const AuthProvider = ({ children }) => {
         return { status: true };
       }
     } catch (error) {
-      setMessage(error.response.data.error.message);
-      if (error) {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: error,
-        });
-      }
       setLoading(false);
-      return { message: error.response.data.error.message, status: false };
+      setMessage("An error occurred");
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage(error.response.data.error.message);
+      }
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: message,
+      });
+      return { message: message, isLoggedIn: false };
     }
-    return { message: message, status: false };
   };
 
   const login = async (data) => {
@@ -80,7 +81,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post("/auth/login", data);
       const tokens = response.data;
       const { accessToken, refreshToken } = tokens;
-      if (accessToken) {
+      if (response && accessToken) {
         await setTokens(accessToken, refreshToken);
         await setAuthorizationHeader();
         setUser(true);
@@ -91,25 +92,22 @@ export const AuthProvider = ({ children }) => {
           text2: "Logged-In Successfully",
         });
         setLoading(false);
-        return { isLoggedIn: "true" };
+        return { message: "Logged-In Successfully", isLoggedIn: "true" };
       }
       // perform navigation from login screen to main screen
     } catch (error) {
-      setMessage(error.response.data.error.message);
-      if (error) {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: error,
-        });
-      }
       setLoading(false);
-      return {
-        message: error.response.data.error.message,
-        isLoggedIn: "false",
-      };
+      setMessage("An error occurred");
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage(error.response.data.error.message);
+      }
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: message,
+      });
+      return { message: message, isLoggedIn: false };
     }
-    return { message: message, isLoggedIn: "false" };
   };
 
   const logout = async () => {
