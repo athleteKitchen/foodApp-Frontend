@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, Pressable, Platform } from "react-native";
+import { StyleSheet, Text, View, Pressable, Platform } from "react-native";
 import React from "react";
 import AnimatedImageComponent from "./components/AnimatedImages";
 import {
@@ -6,7 +6,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const WelcomeScreen = () => {
   const navigation = useNavigation();
@@ -21,10 +21,10 @@ const WelcomeScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Pressable onPress={onHandleBack}>
-          <Icon name="arrow-back-ios" size={30} color="#100f0f" style={{marginTop: 60, marginLeft: 30}} />
+    <>
+      <View style={styles.header}>
+        <Pressable onPress={onHandleBack} style={styles.backButton}>
+          <Icon name="arrow-back-ios" size={30} color="#100f0f" />
         </Pressable>
       </View>
       <View style={styles.imageContainer}>
@@ -39,11 +39,11 @@ const WelcomeScreen = () => {
             <Text style={[styles.button]}>Let's Get Started</Text>
           </Pressable>
           <Pressable onPress={onHandleLogin}>
-            <Text style={[styles.button]}>Sign-In                {'>'}</Text>
+            <Text style={[styles.button]}>Sign-In                {">"}</Text>
           </Pressable>
         </View>
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -53,9 +53,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  header: {
+    position: "absolute",
+    top: hp(2),
+    left: wp(2),
+    zIndex: 1,
+  },
+  backButton: {
+    padding: wp(5),
+  },
   imageContainer: {
     flex: 2,
     width: wp(100),
+    marginTop: hp(7)
   },
   boxContainer: {
     flex: 1.5,
@@ -85,10 +95,10 @@ const styles = StyleSheet.create({
     color: "#fffffc",
   },
   buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    columnGap: 20
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    columnGap: 20,
   },
   button: {
     color: "#000",

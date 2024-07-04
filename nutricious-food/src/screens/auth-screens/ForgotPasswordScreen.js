@@ -98,7 +98,7 @@ const ForgotPasswordScreen = () => {
             <Text
               style={{
                 fontWeight: "bold",
-                fontSize: hp(3),
+                fontSize: hp(2.8),
                 marginVertical: hp(3),
                 textAlign: 'center'
               }}

@@ -1,5 +1,6 @@
 import React from "react";
 import ViewComponent from "../components/ViewComponent";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const FTScreenOne = () => {
 
@@ -11,6 +12,7 @@ const FTScreenOne = () => {
     text3: "Fuel Your Fitness...",
     naviScreen: "FTScreenTwo",
     visited: 1,
+    text2Size: wp(9),
   };
 
   return (

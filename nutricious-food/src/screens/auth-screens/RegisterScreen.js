@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { useState, useContext, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -21,7 +22,6 @@ import { AuthContext } from "../../shared/helpers/AuthContext";
 import PressableButton from "../../shared/components/PressableButton";
 import Toast from "react-native-toast-message";
 import GoogleLogo from "../../../assets/Google1.png";
-import FacebookLogo from "../../../assets/facebook1.png";
 import LoadingModal from "../../shared/components/LoadingModal";
 
 const RegisterScreen = () => {
@@ -43,30 +43,44 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = async () => {
-    try{
-      setLoading(true);
-      const result = await register({ name, email, phone, password });
-      if (result && result.status === true) {
-        // setUser(true);
-        const response = await otpRequest(phone);
-        if(response && response.status === true){
-          navigation.navigate("Otp", { phone });
+    if(email && password && name && phone){
+      try{
+        setLoading(true);
+        const result = await register({ name, email, phone, password });
+        if (result && result.status === true) {
+          // setUser(true);
+          const response = await otpRequest(phone);
+          if(response && response.status === true){
+            // navigation.navigate("Otp", { phone });
+            navigation.navigate("Login");
+          }
+        } else {
+          setLoading(false);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: result.message,
+          });
+          setEmail("");
+          setName("");
+          setPassword("");
+          setPhone("");
         }
-      } else {
-        setLoading(false);
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: result.message,
-        });
-        setEmail("");
-        setName("");
-        setPassword("");
-        setPhone("");
+      } catch(err) {
+        setLoading(false)
+        console.log(err)
       }
-    } catch(err) {
-      setLoading(false)
-      console.log(err)
+    } else {
+      setLoading(false);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Please fill all the details",
+      });
+      setEmail("");
+      setName("");
+      setPassword("");
+      setPhone("");
     }
   };
 
@@ -79,10 +93,11 @@ const RegisterScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    // <SafeAreaView style={styles.container}>
+    <>
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={220}
+        keyboardVerticalOffset={10}
         style={styles.container}
       >
         <View style={styles.header}>
@@ -166,7 +181,8 @@ const RegisterScreen = () => {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+      <StatusBar style="auto" />
+    </>
   );
 };
 
@@ -177,33 +193,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    paddingVertical: hp(2),
     position: "absolute",
+    top: hp(2),
+    left: wp(2),
+    zIndex: 1,
   },
   backButton: {
-    padding: wp(10),
+    padding: wp(5),
   },
   imageContainer: {
-    flex: 1.2,
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: hp(15),
+    // marginVertical: hp(15),
   },
   image: {
     width: 250,
     height: 250,
   },
   formHeader: {
-    fontSize: 26,
+    fontSize: hp(2.75),
     marginBottom: hp(2),
     fontWeight: "bold",
+    textAlign: "center"
   },
   formContainer: {
-    flex: 8,
+    flex: 1.2,
     justifyContent: "centerS",
     padding: 16,
   },

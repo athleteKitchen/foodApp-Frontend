@@ -3,6 +3,7 @@ import React from 'react';
 import StackNavigation from './src/navigation/StackNavigation';
 import { AuthProvider } from './src/shared/helpers/AuthContext';
 import Toast from 'react-native-toast-message';
+import { StatusBar } from 'expo-status-bar';
 
 const App = () => {
   return (
@@ -11,6 +12,7 @@ const App = () => {
         <StackNavigation />
       </AuthProvider>
       <Toast />
+      <StatusBar style='auto' />
     </>
   );
 }

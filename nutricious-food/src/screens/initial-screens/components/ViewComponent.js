@@ -12,9 +12,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Animated, { FadeIn } from "react-native-reanimated";
 import ImageComponent from "./ImageComponent";
-import { FadeInLeft, FadeInRight } from "react-native-reanimated";
+import Animated, { FadeInLeft, FadeInRight } from "react-native-reanimated";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const ViewComponent = ({ data }) => {
@@ -139,26 +138,25 @@ const ViewComponent = ({ data }) => {
             ]}
           ></View>
         </View>
-        <Animated.View
-          entering={FadeIn.duration(500).delay(500)}
-          style={[
-            styles.actionContainer,
-            { marginHorizontal: wp(1) },
-          ]}
-        >
-          <Pressable onPress={onPreviousButton}>
-            {visited == 1 ? (
-              <Text style={styles.skipButton}>Skip</Text>
-            ) : (
-              <Icon name="arrow-back-ios" size={30} color="#100f0f" />
-            )}
-          </Pressable>
-          <Pressable onPress={onNextButton} style={styles.button}>
-            <Text style={styles.text}>
-              {visited != 4 ? `Next >` : "Finish"}
-            </Text>
-          </Pressable>
+        <Animated.View style={[styles.actionContainer]} entering={FadeInLeft.duration(400)}>
+          <Animated.Text>
+            <Pressable onPress={onPreviousButton}>
+              {visited == 1 ? (
+                <Text style={styles.skipButton}>Skip</Text>
+              ) : (
+                <Icon name="arrow-back-ios" size={30} color="#100f0f" />
+              )}
+            </Pressable>
+          </Animated.Text>
+          <Animated.Text>
+            <Pressable onPress={onNextButton} style={styles.button}>
+              <Text style={styles.text}>
+                {visited != 4 ? `Next >` : "Finish"}
+              </Text>
+            </Pressable>
+          </Animated.Text>
         </Animated.View>
+        
       </View>
     </SafeAreaView>
   );
@@ -191,12 +189,12 @@ const styles = StyleSheet.create({
     color: "#8F8F8F",
   },
   actionContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: wp(13),
-    marginHorizontal: wp(5),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: "space-around",
+    columnGap: hp(8),
+    paddingHorizontal: 10,
+    marginVertical: hp(4),
   },
   button: {
     alignItems: "center",

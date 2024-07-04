@@ -32,24 +32,32 @@ const LoginScreen = () => {
   const { login } = useContext(AuthContext);
 
   const handleLogin = async () => {
-    setLoading(true);
-    const result = await login({ email, password });
-    if (result && result.isLoggedIn === "true") {
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: "Logged In Successfully",
-      });
-      navigation.navigate("Home");
+    if (email && password) {
+      setLoading(true);
+      const result = await login({ email, password });
+      if (result.isLoggedIn === "true") {
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Logged In Successfully",
+        });
+        navigation.navigate("Home");
+      } else {
+        setLoading(false);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "An error occurred",
+        });
+        setEmail("");
+        setPassword("");
+      }
     } else {
-      setLoading(false);
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: result.message,
+        text2: "Please enter email and password",
       });
-      setEmail("");
-      setPassword("");
     }
   };
 
@@ -57,9 +65,7 @@ const LoginScreen = () => {
     navigation.navigate("ForgotPassword");
   };
 
-  const handleNoAccount = () => [
-    navigation.navigate("Register")
-  ]
+  const handleNoAccount = () => [navigation.navigate("Register")];
 
   if (loading) {
     return (
@@ -70,66 +76,67 @@ const LoginScreen = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={100}
-        style={styles.container}
-      >
-        <View style={styles.header}>
-          <Pressable onPress={navigation.goBack} style={styles.backButton}>
-            <Icon name="arrow-back-ios" size={30} color="#100f0f" />
-          </Pressable>
-        </View>
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={100}
+      style={styles.container}
+    >
+      <View style={styles.header}>
+        <Pressable onPress={navigation.goBack} style={styles.backButton}>
+          <Icon name="arrow-back-ios" size={30} color="#100f0f" />
+        </Pressable>
+      </View>
 
-        <View style={styles.imageContainer}>
-          <Image source={LoginImage} style={styles.image} />
-        </View>
+      <View style={styles.imageContainer}>
+        <Image source={LoginImage} style={styles.image} />
+      </View>
 
-        <View style={styles.formContainer}>
-          <Text style={styles.formHeader}>Have an Account? Let's Sign In!</Text>
+      <View style={styles.formContainer}>
+        <Text style={styles.formHeader}>Have an Account? Let's Sign In!</Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your email address here"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your email address here"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Enter password here"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter password here"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
-          <Pressable onPress={handleForgotPassword}>
-            <Text style={styles.forgotPasswordText}>Forgot Your Password?</Text>
-          </Pressable>
+        <Pressable onPress={handleForgotPassword}>
+          <Text style={styles.forgotPasswordText}>Forgot Your Password?</Text>
+        </Pressable>
 
-          <PressableButton
-            onHandlePress={handleLogin}
-            title="Sign In"
-            height={60}
-            style={styles.signInButton}
-          />
+        <PressableButton
+          onHandlePress={handleLogin}
+          title="Sign In"
+          height={60}
+          style={styles.signInButton}
+        />
 
-          <Pressable onPress={handleNoAccount}>
-            <Text style={[styles.forgotPasswordText, styles.noAccountText]}>Don't have an Account? Sign Up</Text>
-          </Pressable>
+        <Pressable onPress={handleNoAccount}>
+          <Text style={[styles.forgotPasswordText, styles.noAccountText]}>
+            Don't have an Account? Sign Up
+          </Text>
+        </Pressable>
 
-          {/* <View style={styles.horizontalLineContainer}>
+        {/* <View style={styles.horizontalLineContainer}>
             <View style={styles.horizontalLine}></View>
             <Text style={styles.orText}>or</Text>
             <View style={styles.horizontalLine}></View>
           </View> */}
 
-          {/* <View style={styles.socialLoginButtons}>
+        {/* <View style={styles.socialLoginButtons}>
             <Pressable
               style={[styles.socialButton, styles.googleButton]}
               onPress={handleGoogleSignIn}
@@ -143,9 +150,8 @@ const LoginScreen = () => {
               <Image source={FacebookLogo} style={styles.socialButtonIcon} />
             </Pressable>
           </View> */}
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -165,10 +171,10 @@ const styles = StyleSheet.create({
     padding: wp(5),
   },
   imageContainer: {
-    flex: 5,
+    flex: 3,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: hp(10),
+    // marginTop: hp(10),
   },
   image: {
     width: wp(70),
@@ -176,12 +182,12 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   formContainer: {
-    flex: 7,
+    flex: 3,
     paddingHorizontal: wp(5),
     paddingTop: hp(2),
   },
   formHeader: {
-    fontSize: wp(6),
+    fontSize: wp(5.5),
     fontWeight: "bold",
     marginBottom: hp(2),
     textAlign: "center",
@@ -201,7 +207,9 @@ const styles = StyleSheet.create({
     color: "#6f6f71",
   },
   noAccountText: {
-    marginTop: hp(2)
+    marginTop: hp(2),
+    fontSize: wp(5),
+    fontWeight: "bold",
   },
   signInButton: {
     marginBottom: hp(2),
