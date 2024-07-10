@@ -15,14 +15,24 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fitness.nutritiousfood"
+      "bundleIdentifier": "com.fitness.nutritiousfood",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to provide better services.",
+        "NSUserTrackingUsageDescription": "This app uses notifications to keep you informed."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#f5f5f5"
       },
-      "package": "com.fitness.nutritiousfood"
+      "package": "com.fitness.nutritiousfood",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "com.google.android.c2dm.permission.RECEIVE",
+        "com.google.android.gms.permission.ACTIVITY_RECOGNITION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

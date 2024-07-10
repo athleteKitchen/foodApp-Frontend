@@ -8,12 +8,12 @@ import FTScreenThree from "../screens/initial-screens/first-time-screens/FTScree
 import FTScreenFour from "../screens/initial-screens/first-time-screens/FTScreenFour";
 import RegisterScreen from "../screens/auth-screens/RegisterScreen";
 import LoginScreen from "../screens/auth-screens/LoginScreen";
-import HomeScreen from "../screens/main-screens/HomeScreen";
 import ForgotPasswordScreen from "../screens/auth-screens/ForgotPasswordScreen";
 import { getIsLoggedIn } from "../shared/configs/AxiosConfig";
 import { useState, useEffect } from "react";
 import OtpScreen from "../screens/auth-screens/OtpScreen";
 import ResetPasswordScreen from "../screens/auth-screens/ResetPasswordScreen";
+import BottomNavigation from "./BottomNavigation";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,14 +48,14 @@ const StackNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isLoggedInValue === "true" ? "Home" : "FTScreenOne"}
-        // initialRouteName="ResetPassword"
+        // initialRouteName={isLoggedInValue === "true" ? "Main" : "FTScreenOne"}
+        initialRouteName="Main"
         screenOptions={{
           headerShown: false,
           contentStyle: styles.screenContent,
         }}
       >
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Main" component={BottomNavigation} />
         <Stack.Screen name="FTScreenOne" component={FTScreenOne} />
         <Stack.Screen name="FTScreenTwo" component={FTScreenTwo} />
         <Stack.Screen name="FTScreenThree" component={FTScreenThree} />

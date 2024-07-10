@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     }),
   },
   text: {
-    fontSize: 15,
-    lineHeight: 21,
+    fontSize: hp(2),
+    // lineHeight: 21,
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
