@@ -20,7 +20,7 @@ const AnimatedImageComponent = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 4000);
+    }, 2500);
 
     return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
@@ -30,7 +30,7 @@ const AnimatedImageComponent = () => {
       {images.map((image, index) => (
         <Animated.View
           key={index}
-          entering={FadeInLeft.duration(1000)}
+          entering={FadeInLeft.duration(900)}
           exiting={FadeOutRight.duration(500)}
           style={[
             styles.imageContainer,

@@ -8,7 +8,6 @@ import {
   getTokens,
 } from "../configs/AxiosConfig";
 import Toast from "react-native-toast-message";
-import { measure } from "react-native-reanimated";
 
 export const AuthContext = createContext();
 
@@ -94,7 +93,6 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         return { message: "Logged-In Successfully", isLoggedIn: "true" };
       }
-      // perform navigation from login screen to main screen
     } catch (error) {
       setLoading(false);
       setMessage("An error occurred");

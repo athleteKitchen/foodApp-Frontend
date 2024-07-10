@@ -47,7 +47,7 @@ const LoginScreen = () => {
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: "An error occurred",
+          text2: result.message,
         });
         setEmail("");
         setPassword("");
