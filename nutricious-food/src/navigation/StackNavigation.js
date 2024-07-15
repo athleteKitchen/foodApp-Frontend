@@ -14,12 +14,49 @@ import { useState, useEffect } from "react";
 import OtpScreen from "../screens/auth-screens/OtpScreen";
 import ResetPasswordScreen from "../screens/auth-screens/ResetPasswordScreen";
 import BottomNavigation from "./BottomNavigation";
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Poppins_100Thin,
+  Poppins_200ExtraLight,
+  Poppins_300Light,
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+  Poppins_800ExtraBold,
+  Poppins_900Black,
+} from "@expo-google-fonts/poppins";
+import {
+  Inter_400Regular,
+  Inter_300Light,
+  Inter_500Medium,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
+import TopNavigation from "./TopNavigation";
+import DetailsScreen from "../screens/main-screens/DetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
   const [isLoggedInValue, setIsLoggedInValue] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [fontsLoaded] = useFonts({
+    Poppins_100Thin,
+    Poppins_200ExtraLight,
+    Poppins_300Light,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+    Poppins_800ExtraBold,
+    Poppins_900Black,
+    Inter_400Regular,
+    Inter_300Light,
+    Inter_500Medium,
+    Inter_700Bold,
+  });
 
   const isLoggedIn = async () => {
     try {
@@ -45,30 +82,36 @@ const StackNavigation = () => {
     );
   }
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        // initialRouteName={isLoggedInValue === "true" ? "Main" : "FTScreenOne"}
-        initialRouteName="Main"
-        screenOptions={{
-          headerShown: false,
-          contentStyle: styles.screenContent,
-        }}
-      >
-        <Stack.Screen name="Main" component={BottomNavigation} />
-        <Stack.Screen name="FTScreenOne" component={FTScreenOne} />
-        <Stack.Screen name="FTScreenTwo" component={FTScreenTwo} />
-        <Stack.Screen name="FTScreenThree" component={FTScreenThree} />
-        <Stack.Screen name="FTScreenFour" component={FTScreenFour} />
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-        <Stack.Screen name="Otp" component={OtpScreen} />
-        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  if (fontsLoaded) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator
+          // initialRouteName={isLoggedInValue === "true" ? "Main" : "FTScreenOne"}
+          initialRouteName="Main"
+          screenOptions={{
+            headerShown: false,
+            contentStyle: styles.screenContent,
+          }}
+        >
+          <Stack.Screen name="Main" component={BottomNavigation} />
+          <Stack.Screen name="FitItems" component={TopNavigation} />
+          <Stack.Screen name="FTScreenOne" component={FTScreenOne} />
+          <Stack.Screen name="FTScreenTwo" component={FTScreenTwo} />
+          <Stack.Screen name="FTScreenThree" component={FTScreenThree} />
+          <Stack.Screen name="FTScreenFour" component={FTScreenFour} />
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+          <Stack.Screen name="Otp" component={OtpScreen} />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+          <Stack.Screen name="ItemDetails" component={DetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return <AppLoading />;
+  }
 };
 
 export default StackNavigation;

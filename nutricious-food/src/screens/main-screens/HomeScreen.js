@@ -6,54 +6,29 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from "react-native";
-import { FontAwesome, MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { getIsLoggedIn } from "../../shared/configs/AxiosConfig";
+import { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import LoadingModal from "../../shared/components/LoadingModal";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import { getIsLoggedIn, getTokens } from "../../shared/configs/AxiosConfig";
-import { useEffect, useContext, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../shared/helpers/AuthContext";
-import LoadingModal from "../../shared/components/LoadingModal";
+import { meals, sports } from "../../shared/constants/Constants";
+import PoppinsText from "../../shared/components/PoppinsText";
+import InterText from "../../shared/components/InterText";
+import Profile from "../../../assets/profile_icon.png";
+import { LinearGradient } from "expo-linear-gradient";
+import BannerComponent from "../../shared/components/Banner";
+import HorizontalList from "../../shared/components/HorizontalList";
+import MatrixList from "../../shared/components/MatrixList";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-
-  const images = [
-    {
-      name: "Italian",
-      image: "https://via.placeholder.com/150",
-      color: "#ffad60",
-    },
-    {
-      name: "Chinese",
-      image: "https://via.placeholder.com/150",
-      color: "#f54242",
-    },
-    {
-      name: "Indian",
-      image: "https://via.placeholder.com/150",
-      color: "#f5a442",
-    },
-    {
-      name: "Deshi",
-      image: "https://via.placeholder.com/150",
-      color: "#42f554",
-    },
-    {
-      name: "Burger",
-      image: "https://via.placeholder.com/150",
-      color: "#f5429e",
-    },
-    {
-      name: "Fastfood",
-      image: "https://via.placeholder.com/150",
-      color: "#f5d142",
-    },
-  ];
 
   useEffect(() => {
     const isLoggedIn = getIsLoggedIn();
@@ -69,72 +44,110 @@ const HomeScreen = () => {
       </View>
     );
   }
-
+  
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.locationContainer}>
-          <FontAwesome name="map-marker" size={20} color="grey" />
-          <View style={styles.locationTextContainer}>
-            <Text style={styles.deliveryText}>Delivery to</Text>
-            <Text style={styles.locationText}>36-B South Florida, USA</Text>
+    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <LinearGradient
+        colors={["#ffecd2", "#fce39f"]}
+        style={styles.linearGradient}
+      >
+        <View style={styles.header}>
+          <View style={styles.locationContainer}>
+            <FontAwesome name="map-marker" size={33} color="#25854d" />
+            <View style={styles.locationTextContainer}>
+              <PoppinsText weight="600" style={[styles.deliveryText]}>
+                Location
+              </PoppinsText>
+              <PoppinsText weight="400" style={[styles.locationText]}>
+                36-B South Florida, USA
+              </PoppinsText>
+            </View>
+          </View>
+          <View style={styles.profileContainer}>
+            <View>
+              <PoppinsText weight="600" style={styles.greetingText}>
+                Hi, Anis,
+              </PoppinsText>
+              <PoppinsText weight="400" style={styles.subGreetingText}>
+                Good Evening!
+              </PoppinsText>
+            </View>
+            <Image source={Profile} style={styles.profileImage} />
           </View>
         </View>
-        <View style={styles.profileContainer}>
-          <View>
-            <Text style={styles.greetingText}>Hi, Anis,</Text>
-            <Text style={styles.subGreetingText}>Good Evening!</Text>
-          </View>
-          <Image
-            source={{ uri: "https://via.placeholder.com/150" }}
-            style={styles.profileImage}
-          />
-        </View>
-      </View>
-      <View style={styles.searchContainer}>
-        <View style={styles.searchBox}>
-          <FontAwesome name="search" size={24} color="grey" />
-          <TextInput
-            placeholder="Search for foods"
-            style={styles.searchInput}
-          />
-        </View>
-        <TouchableOpacity style={styles.filterButton}>
-          <Ionicons name="filter" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonGroup}>
-        <TouchableOpacity style={[styles.button, styles.activeButton]}>
-          <Text style={styles.buttonText}>Foods</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Reservation</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Delivery</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.offerContainer}>
-        <Text style={styles.offerText}>BIG OFFER!</Text>
-        <Text style={styles.offerSubText}>Get 20% Off On All Foods</Text>
-        <Text style={styles.offerExpiryText}>
-          Offer Expires On 31st December
-        </Text>
-      </View>
-      <Text style={styles.categoryTitle}>Food Categories</Text>
-      <View style={styles.categoryContainer}>
-        {images.map((category, index) => (
-          <View
-            key={index}
-            style={[styles.categoryBox, { backgroundColor: category.color }]}
+        <View>
+          <PoppinsText
+            weight="700"
+            style={[
+              styles.categoryTitle,
+              { marginVertical: 0, color: "#25854d", fontSize: wp(6) },
+            ]}
           >
-            <Image
-              source={{ uri: category.image }}
-              style={styles.categoryImage}
+            Find your Nutritious Meal
+          </PoppinsText>
+        </View>
+        <View>
+          <PoppinsText
+            weight="500"
+            style={[
+              styles.categoryTitle,
+              {
+                marginVertical: 0,
+                color: "#f1a706",
+                marginTop: Platform.OS === "android" ? -10 : 0,
+                fontSize: wp(6),
+              },
+            ]}
+          >
+            Stay Fit & Healthy
+          </PoppinsText>
+        </View>
+        <View style={styles.searchContainer}>
+          <View style={styles.searchBox}>
+            <FontAwesome name="search" size={23} color="grey" paddingLeft={5} />
+            <TextInput
+              placeholder="Search your meal"
+              style={styles.searchInput}
             />
-            <Text style={styles.categoryText}>{category.name}</Text>
           </View>
-        ))}
+          <TouchableOpacity style={styles.filterButton}>
+            <Ionicons name="filter" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.buttonGroup}>
+          <TouchableOpacity style={[styles.button, styles.activeButton]}>
+            <Text style={styles.buttonText}>Meals</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Journal</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Delivery</Text>
+          </TouchableOpacity>
+        </View>
+        <BannerComponent />
+      </LinearGradient>
+      <InterText
+        weight="700"
+        style={[styles.categoryTitle, styles.categoryTitleV2]}
+      >
+        EXPLORE MEALS
+      </InterText>
+      <View style={styles.underLine}></View>
+      <MatrixList data={meals} navigation={navigation} />
+
+      <InterText
+        weight="700"
+        style={[styles.categoryTitle, styles.categoryTitleV2]}
+      >
+        SPORT SPECIFIC NUTRITION
+      </InterText>
+      <View style={[styles.underLine, { backgroundColor: "#25854d" }]}></View>
+      <HorizontalList data={sports} navigation={navigation}/>
+      <View>
+        <Text>{"\n"}</Text>
+        <Text>{"\n"}</Text>
+        <Text>{"\n"}</Text>
       </View>
     </ScrollView>
   );
@@ -145,73 +158,88 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#f5f5f5",
+    backgroundColor: "rgb(255, 253, 239)",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: wp(4),
-    backgroundColor: 'white',
-    elevation: 2,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: wp(4),
+    marginVertical: hp(2),
+    top: hp(2),
+    paddingVertical: hp(1),
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  scrollContent: {
+    alignItems: "center",
   },
   locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   locationTextContainer: {
     marginLeft: wp(2),
   },
   deliveryText: {
-    color: 'grey',
-    fontSize: wp(3.5),
-    fontWeight: 'bold',
+    color: "#25854d",
+    fontSize: wp(4),
+    lineHeight: 20,
   },
   locationText: {
-    color: 'grey',
+    color: "grey",
     fontSize: wp(3.5),
   },
   profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   greetingText: {
-    color: 'grey',
+    color: "#25854d",
     fontSize: wp(4),
+    lineHeight: 20,
+    textAlign: "right",
   },
   subGreetingText: {
-    color: 'grey',
+    color: "grey",
     fontSize: wp(3.5),
   },
   profileImage: {
-    width: wp(10),
-    height: wp(10),
-    borderRadius: wp(5),
+    width: wp(14),
+    height: wp(14),
+    borderRadius: wp(7),
+    borderCurve: "continuous",
     marginLeft: wp(2),
+    borderWidth: 1,
+    borderColor: "#25854d",
   },
   searchContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: wp(4),
-    backgroundColor: "white",
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(1),
   },
   searchBox: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f1f1f1",
-    borderRadius: wp(2),
+    backgroundColor: "#fccd83",
+    borderRadius: wp(7),
+    borderCurve: "continuous",
     paddingHorizontal: wp(3),
     flex: 1,
     marginRight: wp(2),
   },
   searchInput: {
-    marginLeft: wp(2),
+    marginLeft: wp(4),
     flex: 1,
-    fontSize: wp(4),
+    fontSize: wp(5),
+    paddingVertical: hp(1.2),
   },
   filterButton: {
-    backgroundColor: "#ffad60",
+    backgroundColor: "#faac04",
     padding: wp(3),
     borderRadius: wp(2),
   },
@@ -224,68 +252,47 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingVertical: wp(2),
-    borderRadius: wp(2),
+    borderRadius: wp(5),
+    borderCurve: "continuous",
     marginHorizontal: wp(1),
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#2b9657",
   },
   activeButton: {
-    backgroundColor: "#ffad60",
+    backgroundColor: "#faac04",
+    fontWeight: "bold",
   },
   buttonText: {
     fontSize: wp(4),
     color: "white",
   },
-  offerContainer: {
-    backgroundColor: "#ffad60",
-    padding: wp(4),
-    margin: wp(4),
-    borderRadius: wp(2),
-    alignItems: "center",
-  },
-  offerText: {
-    fontSize: wp(6),
-    color: "white",
-    fontWeight: "bold",
-  },
-  offerSubText: {
-    fontSize: wp(4),
-    color: "white",
-    marginVertical: wp(2),
-  },
-  offerExpiryText: {
-    fontSize: wp(3.5),
-    color: "white",
+  categoryTitleV2: {
+    marginLeft: wp(4),
+    color: "#585858",
+    fontSize: wp(5),
+    marginVertical: hp(2),
   },
   categoryTitle: {
     marginLeft: wp(4),
-    marginVertical: wp(2),
-    fontSize: wp(5),
-    fontWeight: "bold",
+    fontSize: wp(4),
     color: "#333",
   },
-  categoryContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    padding: wp(4),
+  underLine: {
+    backgroundColor: "#faac04",
+    height: 8,
+    width: 50,
+    marginLeft: wp(4),
+    marginTop: -10,
+    marginBottom: hp(1),
   },
-  categoryBox: {
-    width: wp(28),
-    height: wp(28),
-    borderRadius: wp(2),
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: wp(2),
-  },
-  categoryImage: {
-    width: wp(18),
-    height: wp(18),
-    borderRadius: wp(1),
-  },
-  categoryText: {
-    marginTop: wp(1),
-    color: "white",
-    fontSize: wp(4),
-    fontWeight: "bold",
+  linearGradient: {
+    flex: 1,
+    borderBottomLeftRadius: 38,
+    borderBottomRightRadius: 38,
+    height: hp(62),
+    elevation: 7,
+    shadowOffset: { width: 2, height: 2 },
+    shadowColor: "#333",
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
   },
 });
