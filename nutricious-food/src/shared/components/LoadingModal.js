@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 
 const LoadingModal = ({ loading }) => {
   return (
-    <Modal isVisible={loading} backdropOpacity={0.8}>
+    <Modal isVisible={loading} backdropOpacity={0.3}>
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#2ECC71" />
         <Text style={styles.loadingText}>Loading...</Text>
@@ -15,6 +15,7 @@ const LoadingModal = ({ loading }) => {
 
 const styles = StyleSheet.create({
   loadingContainer: {
+    flex :1,
     alignItems: "center",
     justifyContent: "center",
   },

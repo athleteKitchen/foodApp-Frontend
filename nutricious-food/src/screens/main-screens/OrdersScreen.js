@@ -1,14 +1,21 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import PoppinsText from '../../shared/components/PoppinsText'
 
-const OrdersScreen = () => {
+const FavoritesScreen = () => {
   return (
-    <View>
-      <Text>OrdersScreen</Text>
+    <View style={styles.container}>
+      <PoppinsText style={styles.text}>Favorites Screen</PoppinsText>
     </View>
   )
 }
 
-export default OrdersScreen
+export default FavoritesScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+})
