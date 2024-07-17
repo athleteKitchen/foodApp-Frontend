@@ -1,3 +1,4 @@
+import { enableScreens } from 'react-native-screens';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
@@ -10,11 +11,11 @@ import RegisterScreen from "../screens/auth-screens/RegisterScreen";
 import LoginScreen from "../screens/auth-screens/LoginScreen";
 import ForgotPasswordScreen from "../screens/auth-screens/ForgotPasswordScreen";
 import { getIsLoggedIn } from "../shared/configs/AxiosConfig";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import OtpScreen from "../screens/auth-screens/OtpScreen";
 import ResetPasswordScreen from "../screens/auth-screens/ResetPasswordScreen";
 import BottomNavigation from "./BottomNavigation";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
   Poppins_100Thin,
@@ -36,7 +37,11 @@ import {
 import TopNavigation from "./TopNavigation";
 import DetailsScreen from "../screens/main-screens/DetailsScreen";
 
+enableScreens();
+
 const Stack = createNativeStackNavigator();
+
+SplashScreen.preventAutoHideAsync();
 
 const StackNavigation = () => {
   const [isLoggedInValue, setIsLoggedInValue] = useState(null);
@@ -74,6 +79,16 @@ const StackNavigation = () => {
     });
   }, []);
 
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded && !loading) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, loading]);
+
+  if (!fontsLoaded || loading) {
+    return null;
+  }
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -82,8 +97,8 @@ const StackNavigation = () => {
     );
   }
 
-  if (fontsLoaded) {
-    return (
+  return (
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <NavigationContainer>
         <Stack.Navigator
           // initialRouteName={isLoggedInValue === "true" ? "Main" : "FTScreenOne"}
@@ -102,16 +117,17 @@ const StackNavigation = () => {
           <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
           <Stack.Screen name="Otp" component={OtpScreen} />
           <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
           <Stack.Screen name="ItemDetails" component={DetailsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-    );
-  } else {
-    return <AppLoading />;
-  }
+    </View>
+  );
 };
 
 export default StackNavigation;

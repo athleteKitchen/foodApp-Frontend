@@ -1,5 +1,4 @@
 import { StyleSheet, View, TouchableOpacity, Image } from "react-native";
-import React from "react";
 import PoppinsText from "./PoppinsText";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen"; // Ensure to import your wp function
 

@@ -1,4 +1,3 @@
-import React from "react";
 import ViewComponent from "../components/ViewComponent";
 
 const FTScreenFour = () => {

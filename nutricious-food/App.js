@@ -1,4 +1,4 @@
-import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect, useState, useCallback } from "react";
 import StackNavigation from "./src/navigation/StackNavigation";
 import { AuthProvider } from "./src/shared/helpers/AuthContext";
@@ -11,20 +11,21 @@ import {
 import InternetCheck from "./src/shared/helpers/InternetCheck";
 
 const App = () => {
-
   useEffect(() => {
     getLocationAsync();
     registerForPushNotificationsAsync();
   }, []);
 
   return (
-    <InternetCheck>
-      <AuthProvider>
-        <StackNavigation />
-      </AuthProvider>
-      <Toast />
-      <StatusBar style="auto" />
-    </InternetCheck>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <InternetCheck>
+        <AuthProvider>
+          <StackNavigation />
+        </AuthProvider>
+        <Toast />
+        <StatusBar style="auto" />
+      </InternetCheck>
+    </GestureHandlerRootView>
   );
 };
 

@@ -15,29 +15,20 @@ import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { Octicons } from "@expo/vector-icons";
 
-const MenuItem = ({
-  name,
-  price,
-  image,
-  subTitle,
-  rating,
-  description,
-  nutrients,
-  ingredients,
-  kcal,
-}) => {
+const MenuItem = ({ item }) => {
+  const {
+    name,
+    price,
+    image,
+    subTitle,
+    rating,
+    description,
+    nutrients,
+    ingredients,
+    kcal,
+    mealType
+  } = item
   const navigation = useNavigation();
-  const data = {
-    name: name,
-    price: price,
-    image: image,
-    subTitle: subTitle,
-    rating: rating,
-    description: description,
-    nutrients: nutrients,
-    ingredients: ingredients,
-    kcal: kcal,
-  };
 
   const [isLiked, setIsLiked] = useState(false);
   const handleLike = () => {
@@ -57,7 +48,7 @@ const MenuItem = ({
         <TouchableOpacity
           style={styles.touchableContainer}
           onPress={() => {
-            navigation.navigate("ItemDetails", { item: data });
+            navigation.navigate("ItemDetails", { item: item });
           }}
         >
           <View style={styles.itemImageContainer}>

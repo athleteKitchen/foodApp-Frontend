@@ -1,6 +1,5 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import React from "react";
 import PoppinsText from "./PoppinsText";
 import {
   widthPercentageToDP as wp,
@@ -8,25 +7,28 @@ import {
 } from "react-native-responsive-screen";
 import { FontAwesome6 } from "@expo/vector-icons";
 
-const Header = ({ navigation, name, color, style }) => {
+const Header = ({ navigation, name, color, style, isCartIconShown, isBackIconShown }) => {
   return (
     <View
-      style={[{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: wp(5),
-        marginTop: hp(3),
-        paddingHorizontal: wp(6),
-      }, style]}
+      style={[
+        {
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: wp(5),
+          marginTop: hp(3),
+          paddingHorizontal: wp(6),
+        },
+        style
+      ]}
     >
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      {isBackIconShown ? (<TouchableOpacity onPress={() => navigation.goBack()}>
         <Icon
           name="arrow-back-ios"
           size={20}
           color={color ? color : "#100f0f"}
         />
-      </TouchableOpacity>
+      </TouchableOpacity>) : <Text>    </Text>}
       <PoppinsText
         weight="600"
         style={{
@@ -37,7 +39,15 @@ const Header = ({ navigation, name, color, style }) => {
       >
         {name ? name : ""}
       </PoppinsText>
-      <FontAwesome6 name="cart-plus" size={26} color={color ? color : "#100f0f"} />
+      {isCartIconShown ? (
+        <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
+          <FontAwesome6
+            name="cart-plus"
+            size={26}
+            color={color ? color : "#100f0f"}
+          />
+        </TouchableOpacity>
+      ) : <Text>    </Text>}
     </View>
   );
 };

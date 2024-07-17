@@ -1,10 +1,13 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
 import { icons } from "../constants/icons";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 const TabBar = ({ state, descriptors, navigation }) => {
   const primaryColor = "#fce305";
   const greyColor = "#ffffff";
+
+  const focusedIndex = useSharedValue(state.index);
+
   return (
     <View style={styles.tabBar}>
       {state.routes.map((route, index) => {
@@ -28,6 +31,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
           });
 
           if (!isFocused && !event.defaultPrevented) {
+            focusedIndex.value = index;
             navigation.navigate(route.name, route.params);
           }
         };
@@ -38,6 +42,18 @@ const TabBar = ({ state, descriptors, navigation }) => {
             target: route.key,
           });
         };
+
+        const animatedStyles = useAnimatedStyle(() => {
+          return {
+            transform: [
+              {
+                scale: withTiming(isFocused ? 1.2 : 1, {
+                  duration: 100,
+                }),
+              },
+            ],
+          };
+        });
 
         return (
           <TouchableOpacity
@@ -50,19 +66,19 @@ const TabBar = ({ state, descriptors, navigation }) => {
             onPress={onPress}
             onLongPress={onLongPress}
           >
-            {icons[route.name]
-                ({
-                    color: isFocused ? primaryColor : greyColor,
-                })
-            }
-            <Text
-              style={{
+            <Animated.View style={[styles.tabBarContent, animatedStyles]}>
+              {icons[route.name]({
                 color: isFocused ? primaryColor : greyColor,
-                fontSize: 11,
-              }}
-            >
-              {label}
-            </Text>
+              })}
+              <Text
+                style={{
+                  color: isFocused ? primaryColor : greyColor,
+                  fontSize: 11,
+                }}
+              >
+                {label}
+              </Text>
+            </Animated.View>
           </TouchableOpacity>
         );
       })}
@@ -94,6 +110,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 4,
   },
+  tabBarContent: {
+    alignItems: "center",
+    justifyContent: "space-evenly"
+  }
 });
 
 export default TabBar;

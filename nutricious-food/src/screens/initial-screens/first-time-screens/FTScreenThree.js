@@ -1,4 +1,3 @@
-import React from "react";
 import ViewComponent from "../components/ViewComponent";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
