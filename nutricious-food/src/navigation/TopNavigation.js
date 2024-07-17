@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import { StyleSheet } from "react-native";
-import React from "react";
+import { useLayoutEffect } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import MenuCategory from "../shared/components/MenuCategory";
 import { menuItems } from "../shared/constants/Constants";
@@ -17,14 +17,18 @@ const DinnerScreen = () => <MenuCategory items={menuItems} />;
 const TopNavigation = ({ route, navigation }) => {
   const { category } = route.params;
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({ title: category.name });
   }, [navigation, category]);
 
   return (
-    // <SafeAreaView style={{ flex: 1 }}>
     <>
-      <Header navigation={navigation} name={category.name} />
+      <Header
+        navigation={navigation}
+        name={category.name}
+        isBackIconShown={true}
+        isCartIconShown={true}
+      />
       <Tab.Navigator
         initialRouteName="Breakfast"
         screenOptions={{
@@ -47,7 +51,6 @@ const TopNavigation = ({ route, navigation }) => {
         <Tab.Screen name="Dinner" component={DinnerScreen} />
         <Tab.Screen name="Dessert" component={DesertScreen} />
       </Tab.Navigator>
-    {/* </SafeAreaView> */}
     </>
   );
 };

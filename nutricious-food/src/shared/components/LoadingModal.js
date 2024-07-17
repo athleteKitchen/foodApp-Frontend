@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import Modal from "react-native-modal";
 

@@ -102,34 +102,51 @@ export const banners = [
     primaryText: "BIG OFFER!",
     primarySubText: "Get 20% Off On All Foods",
     secondaryText: "Offer Expires On 31st December",
+  }
+];
+
+export const cartItems = [
+  {
+    id: '1',
+    name: 'Beef Pizza',
+    price: 12.00,
+    quantity: 1,
+    image: require("../../../assets/foods25.jpg"), // Replace with actual image URL
   },
   {
-    name: "banner5",
-    image: require("../../../assets/banner6.jpg"),
-    primaryText: "BIG OFFER!",
-    primarySubText: "Get 20% Off On All Foods",
-    secondaryText: "Offer Expires On 31st December",
+    id: '2',
+    name: 'Egg Burger',
+    price: 11.00,
+    quantity: 2,
+    image: require("../../../assets/foods26.jpg"), // Replace with actual image URL
   },
   {
-    name: "banner6",
-    image: require("../../../assets/banner7.jpg"),
-    primaryText: "BIG OFFER!",
-    primarySubText: "Get 20% Off On All Foods",
-    secondaryText: "Offer Expires On 31st December",
+    id: '3',
+    name: 'Cucumber Salad Salad Salad',
+    price: 12.00,
+    quantity: 2,
+    image: require("../../../assets/foods27.jpg"), // Replace with actual image URL
   },
   {
-    name: "banner7",
-    image: require("../../../assets/banner8.jpg"),
-    primaryText: "BIG OFFER!",
-    primarySubText: "Get 20% Off On All Foods",
-    secondaryText: "Offer Expires On 31st December",
+    id: '4',
+    name: 'Cucumber Salad',
+    price: 12.00,
+    quantity: 2,
+    image: require("../../../assets/foods27.jpg"), // Replace with actual image URL
   },
   {
-    name: "banner8",
-    image: require("../../../assets/banner9.jpg"),
-    primaryText: "BIG OFFER!",
-    primarySubText: "Get 20% Off On All Foods",
-    secondaryText: "Offer Expires On 31st December",
+    id: '5',
+    name: 'Cucumber Salad',
+    price: 12.00,
+    quantity: 2,
+    image: require("../../../assets/foods27.jpg"), // Replace with actual image URL
+  },
+  {
+    id: '6',
+    name: 'Cucumber Salad',
+    price: 12.00,
+    quantity: 2,
+    image: require("../../../assets/foods27.jpg"), // Replace with actual image URL
   },
 ];
 
@@ -154,6 +171,8 @@ export const menuItems = [
       { name: "Vegetables" },
       { name: "Spicy Sauce" },
     ],
+    category: "Carbs",
+    mealType: "Lunch",
   },
   {
     id: "2",
@@ -175,6 +194,8 @@ export const menuItems = [
       { name: "Pasta" },
       { name: "Creamy Sauce" },
     ],
+    category: "Protein",
+    mealType: "Dinner",
   },
   {
     id: "3",
@@ -196,6 +217,8 @@ export const menuItems = [
       { name: "Curry Sauce" },
       { name: "Spices" },
     ],
+    category: "Fitness",
+    mealType: "Lunch",
   },
   {
     id: "4",
@@ -217,6 +240,8 @@ export const menuItems = [
       { name: "Tomatoes" },
       { name: "Cucumbers" },
     ],
+    category: "Fitness",
+    mealType: "Lunch",
   },
   {
     id: "5",
@@ -238,6 +263,8 @@ export const menuItems = [
       { name: "Pasta" },
       { name: "Vegetables" },
     ],
+    category: "Protein",
+    mealType: "Lunch",
   },
   {
     id: "6",
@@ -259,6 +286,8 @@ export const menuItems = [
       { name: "Greens" },
       { name: "Dressing" },
     ],
+    category: "Protein",
+    mealType: "Dinner",
   },
   {
     id: "7",
@@ -280,6 +309,8 @@ export const menuItems = [
       { name: "Mozzarella" },
       { name: "Basil" },
     ],
+    category: "Carbs",
+    mealType: "Dinner",
   },
   {
     id: "8",
@@ -301,6 +332,8 @@ export const menuItems = [
       { name: "Vegetables" },
       { name: "Spices" },
     ],
+    category: "Protein",
+    mealType: "Dinner",
   },
   {
     id: "9",
@@ -322,6 +355,8 @@ export const menuItems = [
       { name: "Cheese" },
       { name: "Lettuce" },
     ],
+    category: "Bulking",
+    mealType: "Lunch",
   },
   {
     id: "10",
@@ -343,6 +378,8 @@ export const menuItems = [
       { name: "Buffalo Sauce" },
       { name: "Ranch Dressing" },
     ],
+    category: "Bulking",
+    mealType: "Snack",
   },
   {
     id: "11",
@@ -364,6 +401,8 @@ export const menuItems = [
       { name: "Seasoned Beef" },
       { name: "Salsa" },
     ],
+    category: "Protein",
+    mealType: "Lunch",
   },
   {
     id: "12",
@@ -385,6 +424,8 @@ export const menuItems = [
       { name: "Avocado" },
       { name: "Cucumber" },
     ],
+    category: "Protein",
+    mealType: "Lunch",
   },
   {
     id: "13",
@@ -406,6 +447,8 @@ export const menuItems = [
       { name: "Pita Bread" },
       { name: "Hummus" },
     ],
+    category: "Fitness",
+    mealType: "Lunch",
   },
   {
     id: "14",
@@ -427,6 +470,8 @@ export const menuItems = [
       { name: "Maple Syrup" },
       { name: "Berries" },
     ],
+    category: "Carbs",
+    mealType: "Breakfast",
   },
   {
     id: "15",
@@ -448,5 +493,8 @@ export const menuItems = [
       { name: "Chocolate Frosting" },
       { name: "Cream" },
     ],
+    category: "Fatloss",
+    mealType: "Desert",
   },
 ];
+

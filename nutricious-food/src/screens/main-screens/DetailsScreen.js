@@ -1,11 +1,10 @@
-import React from "react";
 import {
   View,
   Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  Platform
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {
@@ -34,13 +33,30 @@ const DetailsScreen = ({ navigation, route }) => {
           <View style={styles.quantityPrice}>
             <Text style={styles.price}>₹ {item.price}</Text>
             <View style={styles.quantityContainer}>
-              <TouchableOpacity style={styles.quantityButton}>
-                <Ionicons name="remove" size={24} color="white" />
-              </TouchableOpacity>
-              <Text style={styles.quantity}>1</Text>
-              <TouchableOpacity style={styles.quantityButton}>
-                <Ionicons name="add" size={24} color="white" />
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity style={styles.quantityButton}>
+                  <Ionicons name="remove" size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.quantity}>1</Text>
+                <TouchableOpacity style={styles.quantityButton}>
+                  <Ionicons name="add" size={24} color="white" />
+                </TouchableOpacity>
+              </View>
+              <View>
+                <PoppinsText
+                  weight="700"
+                  style={{
+                    fontSize: 15,
+                    padding: 5,
+                    backgroundColor: "#2b9657",
+                    borderRadius: 20,
+                    paddingHorizontal: 20,
+                    color: "rgb(255, 253, 239)",
+                  }}
+                >
+                  {item.mealType.toUpperCase()}
+                </PoppinsText>
+              </View>
             </View>
           </View>
           <Text style={styles.sectionTitle}>Nutrients</Text>
@@ -49,25 +65,35 @@ const DetailsScreen = ({ navigation, route }) => {
               <View style={styles.nutrientValue}>
                 <PoppinsText weight="600">{item.nutrients.carbs}</PoppinsText>
               </View>
-              <PoppinsText weight="700" style={styles.nutrientName}>Carbs</PoppinsText>
+              <PoppinsText weight="700" style={styles.nutrientName}>
+                Carbs
+              </PoppinsText>
             </View>
             <View style={styles.nutrient}>
               <View style={styles.nutrientValue}>
-                <PoppinsText weight="600">{item.nutrients.proteins}</PoppinsText>
+                <PoppinsText weight="600">
+                  {item.nutrients.proteins}
+                </PoppinsText>
               </View>
-              <PoppinsText weight="700" style={styles.nutrientName}>Protein</PoppinsText>
+              <PoppinsText weight="700" style={styles.nutrientName}>
+                Protein
+              </PoppinsText>
             </View>
             <View style={styles.nutrient}>
               <View style={styles.nutrientValue}>
                 <PoppinsText weight="600">{item.nutrients.fats}</PoppinsText>
               </View>
-              <PoppinsText weight="700" style={styles.nutrientName}>Fats</PoppinsText>
+              <PoppinsText weight="700" style={styles.nutrientName}>
+                Fats
+              </PoppinsText>
             </View>
             <View style={styles.nutrient}>
               <View style={styles.nutrientValue}>
                 <PoppinsText weight="600">{item.kcal}</PoppinsText>
               </View>
-              <PoppinsText weight="700" style={styles.nutrientName}>KCal</PoppinsText>
+              <PoppinsText weight="700" style={styles.nutrientName}>
+                KCal
+              </PoppinsText>
             </View>
           </View>
           <Text style={styles.sectionTitle}>Ingredients</Text>
@@ -98,7 +124,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#236b41",
     height: hp(25),
-    zIndex: -1
+    zIndex: -1,
   },
   imageContainer: {
     alignItems: "center",
@@ -149,23 +175,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "grey",
     textAlign: "center",
-    marginBottom: hp(1)
+    marginBottom: hp(1),
   },
   quantityPrice: {
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   price: {
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: hp(1)
+    marginBottom: hp(1),
   },
   quantityContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    columnGap: 40,
+    // marginLeft: 100
   },
   quantityButton: {
     width: 40,
@@ -191,7 +219,7 @@ const styles = StyleSheet.create({
   ingredient: {
     alignItems: "center",
     margin: 0,
-    top: 0
+    top: 0,
   },
   ingredientIcon: {
     width: 40,
@@ -204,7 +232,7 @@ const styles = StyleSheet.create({
   nutrientsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent:"space-between"
+    justifyContent: "space-between",
   },
   nutrient: {
     backgroundColor: "#2b9657",
@@ -231,7 +259,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: "center",
-    marginTop: hp(2)
+    marginTop: hp(2),
   },
   addToCartText: {
     color: "#fff",

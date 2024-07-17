@@ -1,9 +1,4 @@
-import {
-  FlatList,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { FlatList, View, StyleSheet, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import MenuItem from "./MenuItem";
 
@@ -30,19 +25,7 @@ const MenuCategory = ({ items }) => {
       ) : (
         <FlatList
           data={items}
-          renderItem={({ item }) => (
-            <MenuItem
-              name={item.name}
-              price={item.price}
-              image={item.image}
-              subTitle={item.subTitle}
-              rating={item.rating}
-              description={item.description}
-              nutrients={item.nutrients}
-              ingredients={item.ingredients}
-              kcal={item.kcal}
-            />
-          )}
+          renderItem={({ item }) => <MenuItem item={item} />}
           keyExtractor={(item) => item.id}
           numColumns={1}
           contentContainerStyle={styles.list}

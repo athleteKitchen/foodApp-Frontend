@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Platform,
 } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { getIsLoggedIn } from "../../shared/configs/AxiosConfig";
@@ -19,12 +18,99 @@ import {
 } from "react-native-responsive-screen";
 import { meals, sports } from "../../shared/constants/Constants";
 import PoppinsText from "../../shared/components/PoppinsText";
-import InterText from "../../shared/components/InterText";
 import Profile from "../../../assets/profile_icon.png";
 import { LinearGradient } from "expo-linear-gradient";
 import BannerComponent from "../../shared/components/Banner";
 import HorizontalList from "../../shared/components/HorizontalList";
 import MatrixList from "../../shared/components/MatrixList";
+import Footer from "./Components/Footer";
+
+// Reusable Header Component
+const Header = ({ location }) => (
+  <View style={styles.header}>
+    <View style={styles.locationContainer}>
+      <FontAwesome name="map-marker" size={33} color="#25854d" />
+      <View style={styles.locationTextContainer}>
+        <PoppinsText weight="600" style={[styles.deliveryText]}>
+          Location
+        </PoppinsText>
+        <PoppinsText weight="400" style={[styles.locationText]}>
+          {location}
+        </PoppinsText>
+      </View>
+    </View>
+    <Greeting />
+  </View>
+);
+
+// Reusable Greeting Component
+const Greeting = () => (
+  <View style={styles.profileContainer}>
+    <View>
+      <PoppinsText weight="600" style={styles.greetingText}>
+        Hi, Anis,
+      </PoppinsText>
+      <PoppinsText weight="400" style={styles.subGreetingText}>
+        Good Evening!
+      </PoppinsText>
+    </View>
+    <Image source={Profile} style={styles.profileImage} />
+  </View>
+);
+
+// Reusable SearchBar Component
+const SearchBar = () => (
+  <View style={styles.searchContainer}>
+    <View style={styles.searchBox}>
+      <FontAwesome name="search" size={23} color="grey" paddingLeft={5} />
+      <TextInput placeholder="Search your meal" style={styles.searchInput} />
+    </View>
+    <TouchableOpacity style={styles.filterButton}>
+      <Ionicons name="filter" size={24} color="white" />
+    </TouchableOpacity>
+  </View>
+);
+
+// Reusable CategoryTitle Component
+const CategoryTitle = ({
+  text,
+  color = "#333",
+  fontSize = wp(4),
+  style,
+  weight,
+  fontFamily,
+}) => (
+  <PoppinsText
+    weight={weight ? weight : "700"}
+    style={[
+      styles.categoryTitle,
+      {
+        color,
+        fontSize,
+        marginBottom: hp(2),
+        fontFamily: fontFamily ? fontFamily : "Poppins_700Bold",
+      },
+      style,
+    ]}
+  >
+    {text}
+  </PoppinsText>
+);
+
+// Reusable ButtonGroup Component
+const ButtonGroup = () => (
+  <View style={styles.buttonGroup}>
+    <TouchableOpacity style={[styles.button, styles.activeButton]}>
+      <Text style={styles.buttonText}>Meals</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.button}>
+      <Text style={styles.buttonText}>Journal</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.button}>
+      <Text style={styles.buttonText}>Delivery</Text>
+    </TouchableOpacity>
+  </View>
+);
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -44,108 +130,52 @@ const HomeScreen = () => {
       </View>
     );
   }
-  
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <LinearGradient
         colors={["#ffecd2", "#fce39f"]}
         style={styles.linearGradient}
       >
-        <View style={styles.header}>
-          <View style={styles.locationContainer}>
-            <FontAwesome name="map-marker" size={33} color="#25854d" />
-            <View style={styles.locationTextContainer}>
-              <PoppinsText weight="600" style={[styles.deliveryText]}>
-                Location
-              </PoppinsText>
-              <PoppinsText weight="400" style={[styles.locationText]}>
-                36-B South Florida, USA
-              </PoppinsText>
-            </View>
-          </View>
-          <View style={styles.profileContainer}>
-            <View>
-              <PoppinsText weight="600" style={styles.greetingText}>
-                Hi, Anis,
-              </PoppinsText>
-              <PoppinsText weight="400" style={styles.subGreetingText}>
-                Good Evening!
-              </PoppinsText>
-            </View>
-            <Image source={Profile} style={styles.profileImage} />
-          </View>
-        </View>
-        <View>
-          <PoppinsText
-            weight="700"
-            style={[
-              styles.categoryTitle,
-              { marginVertical: 0, color: "#25854d", fontSize: wp(6) },
-            ]}
-          >
-            Find your Nutritious Meal
-          </PoppinsText>
-        </View>
-        <View>
-          <PoppinsText
-            weight="500"
-            style={[
-              styles.categoryTitle,
-              {
-                marginVertical: 0,
-                color: "#f1a706",
-                marginTop: Platform.OS === "android" ? -10 : 0,
-                fontSize: wp(6),
-              },
-            ]}
-          >
-            Stay Fit & Healthy
-          </PoppinsText>
-        </View>
-        <View style={styles.searchContainer}>
-          <View style={styles.searchBox}>
-            <FontAwesome name="search" size={23} color="grey" paddingLeft={5} />
-            <TextInput
-              placeholder="Search your meal"
-              style={styles.searchInput}
-            />
-          </View>
-          <TouchableOpacity style={styles.filterButton}>
-            <Ionicons name="filter" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.buttonGroup}>
-          <TouchableOpacity style={[styles.button, styles.activeButton]}>
-            <Text style={styles.buttonText}>Meals</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Journal</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Delivery</Text>
-          </TouchableOpacity>
-        </View>
+        <Header location="36-B South Florida, USA" />
+        <CategoryTitle
+          text="Find your Nutritious Meal"
+          color="#25854d"
+          fontSize={wp(6)}
+          weight="700"
+        />
+        <CategoryTitle
+          text="Stay Fit & Healthy"
+          color="#f1a706"
+          fontSize={wp(7)}
+          style={{ marginTop: -hp(3) }}
+          weight="500"
+          fontFamily="Poppins_500Medium"
+        />
+        <SearchBar />
+        <ButtonGroup />
         <BannerComponent />
       </LinearGradient>
-      <InterText
-        weight="700"
-        style={[styles.categoryTitle, styles.categoryTitleV2]}
-      >
-        EXPLORE MEALS
-      </InterText>
+      <Text>{"\n"}</Text>
+      <CategoryTitle
+        text="EXPLORE MEALS"
+        color="#585858"
+        fontSize={wp(5)}
+        fontFamily="Inter_700Bold"
+      />
       <View style={styles.underLine}></View>
       <MatrixList data={meals} navigation={navigation} />
-
-      <InterText
-        weight="700"
-        style={[styles.categoryTitle, styles.categoryTitleV2]}
-      >
-        SPORT SPECIFIC NUTRITION
-      </InterText>
+      <Text>{"\n"}</Text>
+      <CategoryTitle
+        text="SPORT SPECIFIC NUTRITION"
+        color="#585858"
+        fontSize={wp(5)}
+        fontFamily="Inter_700Bold"
+      />
       <View style={[styles.underLine, { backgroundColor: "#25854d" }]}></View>
-      <HorizontalList data={sports} navigation={navigation}/>
+      <HorizontalList data={sports} navigation={navigation} />
+      <Footer />
       <View>
-        <Text>{"\n"}</Text>
         <Text>{"\n"}</Text>
         <Text>{"\n"}</Text>
       </View>
@@ -221,6 +251,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: wp(4),
     paddingVertical: hp(1),
+    marginTop: -hp(2),
   },
   searchBox: {
     flexDirection: "row",
@@ -288,7 +319,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBottomLeftRadius: 38,
     borderBottomRightRadius: 38,
-    height: hp(62),
+    height: hp(64),
     elevation: 7,
     shadowOffset: { width: 2, height: 2 },
     shadowColor: "#333",

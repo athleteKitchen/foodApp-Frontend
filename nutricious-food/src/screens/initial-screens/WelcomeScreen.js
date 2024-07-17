@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View, Pressable, Platform } from "react-native";
-import React from "react";
 import AnimatedImageComponent from "./components/AnimatedImages";
 import {
   heightPercentageToDP as hp,

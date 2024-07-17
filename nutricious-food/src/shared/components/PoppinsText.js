@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 
-const PoppinsText = ({ children, style, weight }) => {
+const PoppinsText = ({ children, style, weight, color }) => {
   let fontWeight;
 
   // Set font weight based on the provided weight prop or default to regular (400)
@@ -38,7 +38,7 @@ const PoppinsText = ({ children, style, weight }) => {
       break;
   }
 
-  return <Text style={[styles.text, { fontFamily: fontWeight }, style]}>{children}</Text>;
+  return <Text style={[styles.text, { fontFamily: fontWeight, color: color }, style]}>{children}</Text>;
 };
 
 const styles = StyleSheet.create({

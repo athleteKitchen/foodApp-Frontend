@@ -1,5 +1,4 @@
 import { StyleSheet, Text, Pressable, Platform } from "react-native";
-import React from "react";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 const PressableButton = ({onHandlePress, title, height}) => {

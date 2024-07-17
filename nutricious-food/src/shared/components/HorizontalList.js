@@ -1,6 +1,5 @@
 import { StyleSheet, View, VirtualizedList, Image, TouchableOpacity } from "react-native";
 import PoppinsText from "./PoppinsText";
-import React from "react";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 const HorizontalList = ({ data, navigation }) => {
