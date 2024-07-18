@@ -8,11 +8,11 @@ import Header from "../shared/components/Header";
 
 const Tab = createMaterialTopTabNavigator();
 
-const BreakfastScreen = () => <MenuCategory items={menuItems} />;
-const LunchScreen = () => <MenuCategory items={menuItems} />;
-const SnacksScreen = () => <MenuCategory items={menuItems} />;
-const DesertScreen = () => <MenuCategory items={menuItems} />;
-const DinnerScreen = () => <MenuCategory items={menuItems} />;
+const BreakfastScreen = () => <MenuCategory items={menuItems} isLikeIconShown={true} />;
+const LunchScreen = () => <MenuCategory items={menuItems} isLikeIconShown={true} />;
+const SnacksScreen = () => <MenuCategory items={menuItems} isLikeIconShown={true} />;
+const DesertScreen = () => <MenuCategory items={menuItems} isLikeIconShown={true} />;
+const DinnerScreen = () => <MenuCategory items={menuItems} isLikeIconShown={true} />;
 
 const TopNavigation = ({ route, navigation }) => {
   const { category } = route.params;

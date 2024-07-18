@@ -34,43 +34,43 @@ export const meals = [
 export const sports = [
   {
     name: "Sprint/Jogg",
-    image: require("../../../assets/foods15.jpg"),
+    image: require("../../../assets/sprint.png"),
   },
   {
     name: "Cycling",
-    image: require("../../../assets/foods16.jpg"),
+    image: require("../../../assets/cycling.png"),
   },
   {
     name: "Swimming",
-    image: require("../../../assets/foods19.jpg"),
+    image: require("../../../assets/swimming.png"),
   },
   {
     name: "Weightlifting",
-    image: require("../../../assets/foods20.jpg"),
+    image: require("../../../assets/weightlifts.png"),
   },
   {
     name: "Pilates",
-    image: require("../../../assets/foods25.jpg"),
+    image: require("../../../assets/pilates.png"),
   },
   {
     name: "Basketball",
-    image: require("../../../assets/foods26.jpg"),
+    image: require("../../../assets/basketball.png"),
   },
   {
     name: "Football",
-    image: require("../../../assets/foods26.jpg"),
+    image: require("../../../assets/football.png"),
   },
   {
     name: "Tennis",
-    image: require("../../../assets/foods26.jpg"),
+    image: require("../../../assets/tennis.png"),
   },
   {
     name: "Boxing",
-    image: require("../../../assets/foods26.jpg"),
+    image: require("../../../assets/boxing.png"),
   },
   {
     name: "CrossFit",
-    image: require("../../../assets/foods26.jpg"),
+    image: require("../../../assets/crossfit.png"),
   },
 ];
 

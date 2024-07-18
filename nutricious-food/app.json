@@ -37,17 +37,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      [
-        "expo-font",
-        {
-          "fonts": [
-            {"Inter_400Regular":"node_modules/@expo-google-fonts/inter/Inter_400Regular.ttf"},
-            {"Poppins_400Regular":"node_modules/@expo-google-fonts/poppins/Poppins_400Regular.ttf"}
-          ]
-        }
-      ]
-    ],
     "extra": {
       "eas": {
         "projectId": "4662eb92-63bf-4221-ba6f-c6d7d55d6a8a"
@@ -55,6 +44,6 @@
       "googleClientIdAndroid": "467819170767-is6r8jjmqt78a9pume9bb63i71ss4ort.apps.googleusercontent.com",
       "googleClientIdIOS": "467819170767-m3n609kmebkr8cc57umlie9rqv53d3n3.apps.googleusercontent.com"
     },
-    "owner": "athleteUser"
+    "owner": "athleteuser"
   }
 }

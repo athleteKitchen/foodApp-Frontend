@@ -35,7 +35,7 @@ const BottomNavigation = () => {
       <Tab.Screen name="Plan" component={PlanningScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Cart" component={CartScreen} />
-      <Tab.Screen name="Favorites" component={FavoritesScreen} />
+      <Tab.Screen name="Wishlist" component={FavoritesScreen} />
     </Tab.Navigator>
   );
 };

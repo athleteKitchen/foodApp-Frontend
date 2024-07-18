@@ -9,7 +9,7 @@ import {
   AntDesign,
 } from "@expo/vector-icons";
 import PoppinsText from "../../shared/components/PoppinsText";
-import ProfileOption from "./Components/ProfileOption"; // import the new ProfileOption component
+import ProfileOption from "./Components/ProfileOption";
 import { LinearGradient } from "expo-linear-gradient";
 
 const ProfileScreen = () => {
@@ -34,7 +34,7 @@ const ProfileScreen = () => {
 
   return (
     <LinearGradient
-      colors={["#faecd9", "#fff3d3"]}
+      colors={["#faf5ef", "#fcf6e6"]}
       start={{ x: 1, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={styles.profileSidebar}
@@ -46,7 +46,7 @@ const ProfileScreen = () => {
         <Image source={Profile} style={styles.profileImage} />
       </View>
       <PoppinsText weight="700" style={styles.profileName}>
-        Shashank S
+        John Doe
       </PoppinsText>
       <View style={styles.profileOptions}>
         <ProfileOption

@@ -2,7 +2,7 @@ import { FlatList, View, StyleSheet, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
 import MenuItem from "./MenuItem";
 
-const MenuCategory = ({ items }) => {
+const MenuCategory = ({ items, isLikeIconShown }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const MenuCategory = ({ items }) => {
       ) : (
         <FlatList
           data={items}
-          renderItem={({ item }) => <MenuItem item={item} />}
+          renderItem={({ item }) => <MenuItem item={item} isLikeIconShown={isLikeIconShown} />}
           keyExtractor={(item) => item.id}
           numColumns={1}
           contentContainerStyle={styles.list}
