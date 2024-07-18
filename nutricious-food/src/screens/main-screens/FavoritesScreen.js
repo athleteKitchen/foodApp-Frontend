@@ -8,13 +8,14 @@ const FavoritesScreen = () => {
   return (
     <View style={styles.container}>
       <Header
-        name={"Favorites"}
+        name={"Wishlist"}
         isCartIconShown={false}
         isBackIconShown={false}
       />
-      <MenuCategory items={menuItems} />
+      <PoppinsText weight="700" style={{ textAlign :"center", fontSize: 25 }}>Total {menuItems.length} items...</PoppinsText>
+      <MenuCategory items={menuItems} isLikeIconShown={false} />
     </View>
-  );
+  );  
 };
 
 export default FavoritesScreen;

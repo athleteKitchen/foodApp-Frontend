@@ -5,5 +5,5 @@ export const icons = {
     Plan: (props)=> <MaterialIcons name="fitbit" size={26} {...props} />,
     Profile: (props)=> <MaterialIcons name="account-circle" size={26} {...props} />,
     Cart: (props)=> <FontAwesome6 name="cart-plus" size={26} {...props} />,
-    Favorites: (props)=> <MaterialIcons name="favorite" size={26} {...props} />,
+    Wishlist: (props)=> <MaterialIcons name="favorite" size={26} {...props} />,
 }
