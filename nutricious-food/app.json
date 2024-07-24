@@ -17,7 +17,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.fitness.nutritiousfood",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "This app uses your location to provide better services.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location to provide better services.",
         "NSUserTrackingUsageDescription": "This app uses notifications to keep you informed."
       }
     },

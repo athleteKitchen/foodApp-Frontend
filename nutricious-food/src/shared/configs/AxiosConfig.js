@@ -1,8 +1,9 @@
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 const api = axios.create({
-  baseURL: "http://192.168.29.236:80",
+  baseURL: "http://192.168.29.236:90",
 });
 
 const setAuthorizationHeader = async () => {
@@ -34,11 +35,6 @@ const setTokens = async (accessToken, refreshToken) => {
   await AsyncStorage.setItem("refresh-token", refreshToken);
 };
 
-const getIsLoggedIn = async () => {
-  const value = await AsyncStorage.getItem('isLoggedIn');
-  return value;
-}
-
 const getTokens = async () => {
   try {
     const accessToken = await AsyncStorage.getItem("access-token");
@@ -52,7 +48,7 @@ const getTokens = async () => {
 
 const refreshTokenApi = async (token) => {
   try {
-    const response = await api.post("/auth/refresh-token", { token });
+    const response = await api.post("/auth-service/auth/refresh-token", { token });
     const tokens = response.data
     const { accessToken, newRefreshToken } = tokens;
 
@@ -61,7 +57,13 @@ const refreshTokenApi = async (token) => {
 
     await setAuthorizationHeader();
   } catch (error) {
-    console.error("Refresh token error:", error.message);
+    console.error("This User is LoggedIn in another device:", error.message);
+    await AsyncStorage.removeItem('isLoggedIn');
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2: "This User in LoggedIn in another device"
+    })
   }
 };
 
@@ -92,7 +94,7 @@ api.interceptors.response.use(
           // originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
           return api(originalRequest);
         } catch (refreshError) {
-          console.error("Refresh token error:", refreshError);
+          console.error("Interceptor Refresh token error:", refreshError);
           // Handle refresh token error (e.g., logout user)
         }
       }
@@ -109,5 +111,4 @@ export {
   removeTokens,
   setTokens,
   getTokens,
-  getIsLoggedIn
 };

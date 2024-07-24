@@ -17,11 +17,10 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import RegisterImage from "../../../assets/register-screen-1.png";
+import Images from "../../shared/constants/Images";
 import { AuthContext } from "../../shared/helpers/AuthContext";
 import PressableButton from "../../shared/components/PressableButton";
 import Toast from "react-native-toast-message";
-import GoogleLogo from "../../../assets/Google1.png";
 import LoadingModal from "../../shared/components/LoadingModal";
 
 const RegisterScreen = () => {
@@ -36,24 +35,21 @@ const RegisterScreen = () => {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { setUser, register, otpRequest } = useContext(AuthContext);
+  const { setUser, register, otpEmailRequest } = useContext(AuthContext);
 
   const handleToLogin = async () => {
     navigation.navigate("Login");
   };
 
   const handleRegister = async () => {
-    if(email && password && name && phone){
-      try{
+    if (email && password && name && phone) {
+      try {
         setLoading(true);
         const result = await register({ name, email, phone, password });
+        console.log(result);
         if (result && result.status === true) {
-          // setUser(true);
-          const response = await otpRequest(phone);
-          if(response && response.status === true){
-            // navigation.navigate("Otp", { phone });
-            navigation.navigate("Login");
-          }
+          navigation.navigate("Otp", { email });
+          setLoading(false);
         } else {
           setLoading(false);
           Toast.show({
@@ -66,9 +62,9 @@ const RegisterScreen = () => {
           setPassword("");
           setPhone("");
         }
-      } catch(err) {
-        setLoading(false)
-        console.log(err)
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
       }
     } else {
       setLoading(false);
@@ -106,7 +102,7 @@ const RegisterScreen = () => {
           </Pressable>
         </View>
         <View style={styles.imageContainer}>
-          <Image source={RegisterImage} style={styles.image} />
+          <Image source={Images.RegisterImage} style={styles.image} />
         </View>
         <View style={styles.formContainer}>
           <Text style={styles.formHeader}>Don't Have Account? Let's Do!</Text>
@@ -215,7 +211,7 @@ const styles = StyleSheet.create({
     fontSize: hp(2.75),
     marginBottom: hp(2),
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
   },
   formContainer: {
     flex: 1.2,

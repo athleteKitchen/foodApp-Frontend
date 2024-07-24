@@ -1,28 +1,69 @@
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
 
-const getLocationAsync = async () => {
+const requestLocationAsync = async () => {
   let { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") {
     console.log("Location permission not granted");
-    // Handle permission denied case
   } else {
     console.log("Location permission granted");
-    // Permission granted, proceed with using Location
-    const location = await Location.getCurrentPositionAsync({});
-    console.log(location);
   }
 };
 
 const registerForPushNotificationsAsync = async () => {
   const { status } = await Notifications.requestPermissionsAsync();
   if (status !== "granted") {
-    setErrorMsg("Notification permission not granted");
+    console.log("Notification permission not granted");
     return;
   }
 };
 
-export {
-    getLocationAsync,
-    registerForPushNotificationsAsync
+const getLocationCoordsAsync = async () => {
+  const status = await Location.hasServicesEnabledAsync();
+  if (status === true) {
+    const locationCoords = await Location.getCurrentPositionAsync({
+      accuracy: 6,
+    });
+    return {
+      longitude: locationCoords.coords.longitude,
+      latitude: locationCoords.coords.latitude,
+    };
+  } else {
+    await requestLocationAsync();
+    return;
+  }
+};
+
+const getLocationAddressAsync = async (longitude, latitude) => {
+  const address = await Location.reverseGeocodeAsync({
+    longitude: longitude,
+    latitude: latitude,
+  });
+
+  return address;
+};
+
+const getGeoLocationAsync = async () => {
+  const status = await Location.hasServicesEnabledAsync();
+  if (status === true) {
+    const locationCoords = await Location.getCurrentPositionAsync({
+      accuracy: 6,
+    });
+    const address = await Location.reverseGeocodeAsync({
+      longitude: locationCoords.coords.longitude,
+      latitude: locationCoords.coords.latitude,
+    });
+    return address;
+  } else {
+    await requestLocationAsync();
+    return;
+  }
 }
+
+export {
+  requestLocationAsync,
+  registerForPushNotificationsAsync,
+  getLocationCoordsAsync,
+  getLocationAddressAsync,
+  getGeoLocationAsync
+};

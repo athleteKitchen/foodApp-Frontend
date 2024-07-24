@@ -1,7 +1,7 @@
-import { enableScreens } from 'react-native-screens';
+import { enableScreens } from "react-native-screens";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View } from "react-native";
 import WelcomeScreen from "../screens/initial-screens/WelcomeScreen";
 import FTScreenOne from "../screens/initial-screens/first-time-screens/FTScreenOne";
 import FTScreenTwo from "../screens/initial-screens/first-time-screens/FTScreenTwo";
@@ -10,74 +10,54 @@ import FTScreenFour from "../screens/initial-screens/first-time-screens/FTScreen
 import RegisterScreen from "../screens/auth-screens/RegisterScreen";
 import LoginScreen from "../screens/auth-screens/LoginScreen";
 import ForgotPasswordScreen from "../screens/auth-screens/ForgotPasswordScreen";
-import { getIsLoggedIn } from "../shared/configs/AxiosConfig";
-import { useState, useEffect, useCallback } from "react";
 import OtpScreen from "../screens/auth-screens/OtpScreen";
 import ResetPasswordScreen from "../screens/auth-screens/ResetPasswordScreen";
 import BottomNavigation from "./BottomNavigation";
-import * as SplashScreen from "expo-splash-screen";
-import {
-  useFonts,
-  Poppins_100Thin,
-  Poppins_200ExtraLight,
-  Poppins_300Light,
-  Poppins_400Regular,
-  Poppins_500Medium,
-  Poppins_600SemiBold,
-  Poppins_700Bold,
-  Poppins_800ExtraBold,
-  Poppins_900Black,
-} from "@expo-google-fonts/poppins";
-import {
-  Inter_400Regular,
-  Inter_300Light,
-  Inter_500Medium,
-  Inter_700Bold,
-} from "@expo-google-fonts/inter";
 import TopNavigation from "./TopNavigation";
 import DetailsScreen from "../screens/main-screens/DetailsScreen";
+import WeightScreen from "../screens/meal-planning-screens/WeightScreen";
+import HeightScreen from "../screens/meal-planning-screens/HeightScreen";
+import ProteinScreen from "../screens/meal-planning-screens/ProteinScreen";
+import FitnessGoalScreen from "../screens/meal-planning-screens/FitnessGoalScreen";
+import VegNonVegScreen from "../screens/meal-planning-screens/VegNonVegScreen";
+import MealPrepLoading from "../screens/meal-planning-screens/MealPrepLoading";
+import LoadingModal from "../shared/components/LoadingModal";
+import { useInitApp } from "../shared/hooks/useInitApp";
+import { useFontsLoaded } from "../shared/hooks/useFontsLoaded";
+import * as SplashScreen from "expo-splash-screen";
+import { useCallback } from "react";
 
 enableScreens();
 
-const Stack = createNativeStackNavigator();
-
 SplashScreen.preventAutoHideAsync();
 
+const Stack = createNativeStackNavigator();
+
+const screens = [
+  { name: "Main", component: BottomNavigation },
+  { name: "FitItems", component: TopNavigation },
+  { name: "FTScreenOne", component: FTScreenOne },
+  { name: "FTScreenTwo", component: FTScreenTwo },
+  { name: "FTScreenThree", component: FTScreenThree },
+  { name: "FTScreenFour", component: FTScreenFour },
+  { name: "Welcome", component: WelcomeScreen },
+  { name: "Register", component: RegisterScreen },
+  { name: "Login", component: LoginScreen },
+  { name: "ForgotPassword", component: ForgotPasswordScreen },
+  { name: "Otp", component: OtpScreen },
+  { name: "ResetPassword", component: ResetPasswordScreen },
+  { name: "ItemDetails", component: DetailsScreen },
+  { name: "Weight", component: WeightScreen },
+  { name: "Height", component: HeightScreen },
+  { name: "Protein", component: ProteinScreen },
+  { name: "FitnessGoal", component: FitnessGoalScreen },
+  { name: "VegNonVeg", component: VegNonVegScreen },
+  { name: "MealPlanLoading", component: MealPrepLoading },
+];
+
 const StackNavigation = () => {
-  const [isLoggedInValue, setIsLoggedInValue] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const [fontsLoaded] = useFonts({
-    Poppins_100Thin,
-    Poppins_200ExtraLight,
-    Poppins_300Light,
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_600SemiBold,
-    Poppins_700Bold,
-    Poppins_800ExtraBold,
-    Poppins_900Black,
-    Inter_400Regular,
-    Inter_300Light,
-    Inter_500Medium,
-    Inter_700Bold,
-  });
-
-  const isLoggedIn = async () => {
-    try {
-      const val = await getIsLoggedIn();
-      return val;
-    } catch (error) {
-      console.error("Error getting login status:", error);
-    }
-  };
-
-  useEffect(() => {
-    isLoggedIn().then((val) => {
-      setIsLoggedInValue(val);
-      setLoading(false);
-    });
-  }, []);
+  const [isLoggedIn, loading] = useInitApp();
+  const fontsLoaded = useFontsLoaded();
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded && !loading) {
@@ -91,8 +71,8 @@ const StackNavigation = () => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2ECC71" />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <LoadingModal loading={loading} />
       </View>
     );
   }
@@ -101,29 +81,15 @@ const StackNavigation = () => {
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <NavigationContainer>
         <Stack.Navigator
-          // initialRouteName={isLoggedInValue === "true" ? "Main" : "FTScreenOne"}
-          initialRouteName="Main"
+          initialRouteName={isLoggedIn === "true" ? "Main" : "FTScreenOne"}
           screenOptions={{
             headerShown: false,
             contentStyle: styles.screenContent,
           }}
         >
-          <Stack.Screen name="Main" component={BottomNavigation} />
-          <Stack.Screen name="FitItems" component={TopNavigation} />
-          <Stack.Screen name="FTScreenOne" component={FTScreenOne} />
-          <Stack.Screen name="FTScreenTwo" component={FTScreenTwo} />
-          <Stack.Screen name="FTScreenThree" component={FTScreenThree} />
-          <Stack.Screen name="FTScreenFour" component={FTScreenFour} />
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-          />
-          <Stack.Screen name="Otp" component={OtpScreen} />
-          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
-          <Stack.Screen name="ItemDetails" component={DetailsScreen} />
+          {screens.map((screen) => (
+            <Stack.Screen key={screen.name} name={screen.name} component={screen.component} />
+          ))}
         </Stack.Navigator>
       </NavigationContainer>
     </View>

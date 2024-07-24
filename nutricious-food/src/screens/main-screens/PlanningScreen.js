@@ -1,10 +1,19 @@
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import CalenderNavigation from "../main-screens/Components/CalenderNavigation";
 import SearchBar from "../main-screens/Components/SearchBar";
 import MealSection from "../main-screens/Components/MealSection";
 import { LinearGradient } from "expo-linear-gradient";
+import { AuthContext } from "../../shared/helpers/AuthContext";
+import { useContext, useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
-const PlanningScreen = ({ route, navigation }) => {
+const MealPlanReady = ({ route, navigation }) => {
   return (
     <>
       <CalenderNavigation navigation={navigation} />
@@ -35,6 +44,52 @@ const PlanningScreen = ({ route, navigation }) => {
   );
 };
 
+const PlanningScreen = ({ route, navigation }) => {
+  const [isMealPlanDone, setIsMealPlanDone] = useState(null);
+  const { checkIsMealPlanDone } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+
+  const checkMealPlan = async () => {
+    try {
+      const response = await checkIsMealPlanDone();
+      setIsMealPlanDone(response);
+    } catch (err) {
+      console.error("Error checking meal plan:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      checkMealPlan();
+    }, [checkIsMealPlanDone])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isMealPlanDone === "false") {
+        navigation.navigate("Weight");
+      }
+    }, [isMealPlanDone, navigation])
+  );
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#2ECC71" />
+      </View>
+    );
+  }
+
+  return isMealPlanDone === "true" ? (
+    <MealPlanReady navigation={navigation} route={route} />
+  ) : null;
+};
+
+export default PlanningScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -48,6 +103,9 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     zIndex: 10,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
-
-export default PlanningScreen;

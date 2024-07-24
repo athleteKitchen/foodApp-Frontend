@@ -8,8 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { getIsLoggedIn } from "../../shared/configs/AxiosConfig";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../../shared/helpers/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 import LoadingModal from "../../shared/components/LoadingModal";
 import {
@@ -18,33 +18,36 @@ import {
 } from "react-native-responsive-screen";
 import { meals, sports } from "../../shared/constants/Constants";
 import PoppinsText from "../../shared/components/PoppinsText";
-import Profile from "../../../assets/profile_icon.png";
+import Images from "../../shared/constants/Images";
 import { LinearGradient } from "expo-linear-gradient";
 import BannerComponent from "../../shared/components/Banner";
 import HorizontalList from "../../shared/components/HorizontalList";
 import MatrixList from "../../shared/components/MatrixList";
 import Footer from "./Components/Footer";
+import { useSelector } from "react-redux";
 
 // Reusable Header Component
-const Header = ({ location }) => (
+const Header = ({ location, district }) => (
   <View style={styles.header}>
-    <View style={styles.locationContainer}>
+    <TouchableOpacity style={styles.locationContainer}>
       <FontAwesome name="map-marker" size={33} color="#25854d" />
       <View style={styles.locationTextContainer}>
         <PoppinsText weight="600" style={[styles.deliveryText]}>
-          Location
+          {district}
         </PoppinsText>
         <PoppinsText weight="400" style={[styles.locationText]}>
           {location}
         </PoppinsText>
       </View>
-    </View>
+    </TouchableOpacity>
     <Greeting />
   </View>
 );
 
 // Reusable Greeting Component
-const Greeting = () => (
+const Greeting = () => {
+  const navigation = useNavigation();
+  return(
   <View style={styles.profileContainer}>
     <View>
       <PoppinsText weight="600" style={styles.greetingText}>
@@ -54,9 +57,11 @@ const Greeting = () => (
         Good Evening!
       </PoppinsText>
     </View>
-    <Image source={Profile} style={styles.profileImage} />
+    <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+      <Image source={Images.Profile} style={styles.profileImage} />
+    </TouchableOpacity>
   </View>
-);
+)};
 
 // Reusable SearchBar Component
 const SearchBar = () => (
@@ -114,15 +119,22 @@ const ButtonGroup = () => (
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(null);
+
+  const street = useSelector((state) => state.location.street);
+  const streetNumber = useSelector((state) => state.location.streetNumber);
+  const district = useSelector((state) => state.location.district)
+
+  const shortAddr = `${streetNumber}, ${street}`;
 
   useEffect(() => {
-    const isLoggedIn = getIsLoggedIn();
-    if (!isLoggedIn) {
-      navigation.navigate("Login");
+    if (street && streetNumber && district) {
+      setLoading(false);
+    } else {
+      setLoading(true);
     }
-  }, []);
-
+  }, [street, streetNumber, district]);
+  
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -137,7 +149,7 @@ const HomeScreen = () => {
         colors={["#ffecd2", "#fce39f"]}
         style={styles.linearGradient}
       >
-        <Header location="36-B South Florida, USA" />
+        <Header location={shortAddr} district={district} />
         <CategoryTitle
           text="Find your Nutritious Meal"
           color="#25854d"
@@ -189,6 +201,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgb(255, 253, 239)",
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
   },
   header: {
     flexDirection: "row",

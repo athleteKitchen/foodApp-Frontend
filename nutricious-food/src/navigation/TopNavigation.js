@@ -56,6 +56,8 @@ const TopNavigation = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+  },
   tabBarStyle: {
     width: "92%",
     alignSelf: "center",

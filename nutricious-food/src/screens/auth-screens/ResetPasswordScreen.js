@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TextInput } from "react-native";
 import React, { useContext, useState } from "react";
 import PressableButton from "../../shared/components/PressableButton";
-import ForgotImage from "../../../assets/forgot-screen-1.png";
+import Images from "../../shared/constants/Images";
 import LoadingModal from "../../shared/components/LoadingModal";
 import {
   widthPercentageToDP as wp,
@@ -55,7 +55,7 @@ const ResetPasswordScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={ForgotImage} style={styles.image} />
+        <Image source={Images.ForgotImage} style={styles.image} />
       </View>
       <View style={{ flex: 0.5 }}>
         <Text

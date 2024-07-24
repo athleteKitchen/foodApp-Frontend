@@ -1,32 +1,34 @@
+import Images from "./Images";
+
 export const meals = [
   {
     name: "Fitness",
-    image: require("../../../assets/foods15.jpg"),
+    image: Images.Fitness,
     color: "#25854d",
   },
   {
     name: "Bulking",
-    image: require("../../../assets/foods16.jpg"),
+    image: Images.Bulking,
     color: "#e90f08",
   },
   {
     name: "Fatloss",
-    image: require("../../../assets/foods19.jpg"),
+    image: Images.Fatloss,
     color: "#faac04",
   },
   {
-    name: "Cuting",
-    image: require("../../../assets/foods20.jpg"),
+    name: "Lean Muscle",
+    image: Images.LeanMuscle,
     color: "#25854d",
   },
   {
     name: "Carbs",
-    image: require("../../../assets/foods25.jpg"),
+    image: Images.Carbs,
     color: "#e90f08",
   },
   {
     name: "Protein",
-    image: require("../../../assets/foods26.jpg"),
+    image: Images.Protein,
     color: "#faac04",
   },
 ];
@@ -34,71 +36,71 @@ export const meals = [
 export const sports = [
   {
     name: "Sprint/Jogg",
-    image: require("../../../assets/sprint.png"),
+    image: Images.Sprint,
   },
   {
     name: "Cycling",
-    image: require("../../../assets/cycling.png"),
+    image: Images.Cycling,
   },
   {
     name: "Swimming",
-    image: require("../../../assets/swimming.png"),
+    image: Images.Swimming,
   },
   {
     name: "Weightlifting",
-    image: require("../../../assets/weightlifts.png"),
+    image: Images.Weightlifts,
   },
   {
     name: "Pilates",
-    image: require("../../../assets/pilates.png"),
+    image: Images.Pilates,
   },
   {
     name: "Basketball",
-    image: require("../../../assets/basketball.png"),
+    image: Images.Basketball,
   },
   {
     name: "Football",
-    image: require("../../../assets/football.png"),
+    image: Images.Football,
   },
   {
     name: "Tennis",
-    image: require("../../../assets/tennis.png"),
+    image: Images.Tennis,
   },
   {
     name: "Boxing",
-    image: require("../../../assets/boxing.png"),
+    image: Images.Boxing,
   },
   {
     name: "CrossFit",
-    image: require("../../../assets/crossfit.png"),
+    image: Images.Crossfit,
   },
 ];
 
 export const banners = [
   {
     name: "banner1",
-    image: require("../../../assets/banner1.jpg"),
+    image: Images.Banner1,
     primaryText: "BIG OFFER!",
     primarySubText: "Get 20% Off On All Foods",
     secondaryText: "Offer Expires On 31st December",
   },
   {
     name: "banner2",
-    image: require("../../../assets/banner2.jpg"),
+    image: Images.Banner2,
     primaryText: "BIG OFFER!",
     primarySubText: "Get 20% Off On All Foods",
     secondaryText: "Offer Expires On 31st December",
   },
   {
     name: "banner3",
-    image: require("../../../assets/banner3.jpg"),
+    image: Images.Banner3,
     primaryText: "BIG OFFER!",
     primarySubText: "Get 20% Off On All Foods",
     secondaryText: "Offer Expires On 31st December",
   },
   {
     name: "banner4",
-    image: require("../../../assets/banner5.jpg"),
+    image: Images.Banner4,
     primaryText: "BIG OFFER!",
     primarySubText: "Get 20% Off On All Foods",
     secondaryText: "Offer Expires On 31st December",

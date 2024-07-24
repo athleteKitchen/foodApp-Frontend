@@ -15,11 +15,10 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import LoginImage from "../../../assets/login-screen-1.png";
+import Images from "../../shared/constants/Images";
 import { AuthContext } from "../../shared/helpers/AuthContext";
 import PressableButton from "../../shared/components/PressableButton";
 import Toast from "react-native-toast-message";
-import GoogleLogo from "../../../assets/Google1.png";
 import LoadingModal from "../../shared/components/LoadingModal";
 
 const LoginScreen = () => {
@@ -41,7 +40,8 @@ const LoginScreen = () => {
           text1: "Success",
           text2: "Logged In Successfully",
         });
-        navigation.navigate("Home");
+        setLoading(false)
+        navigation.navigate("Main")
       } else {
         setLoading(false);
         Toast.show({
@@ -88,7 +88,7 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.imageContainer}>
-        <Image source={LoginImage} style={styles.image} />
+        <Image source={Images.LoginImage} style={styles.image} />
       </View>
 
       <View style={styles.formContainer}>

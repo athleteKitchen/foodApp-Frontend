@@ -16,7 +16,7 @@ import {
 import PressableButton from "../../shared/components/PressableButton";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import ForgotImage from "../../../assets/forgot-screen-1.png";
+import Images from "../../shared/constants/Images";
 import { AuthContext } from "../../shared/helpers/AuthContext";
 
 const ForgotPasswordScreen = () => {
@@ -91,7 +91,7 @@ const ForgotPasswordScreen = () => {
         style={styles.container}
       >       
         <View style={styles.imageContainer}>
-          <Image source={ForgotImage} style={styles.image} />
+          <Image source={Images.ForgotImage} style={styles.image} />
         </View>
         {!isEmailSent ? (
           <View>

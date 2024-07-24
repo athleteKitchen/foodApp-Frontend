@@ -9,21 +9,20 @@ import {
   Text,
   KeyboardAvoidingView,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import OtpImage from "../../../assets/otp.png";
+import Images from "../../shared/constants/Images";
 import { AuthContext } from "../../shared/helpers/AuthContext";
 import PressableButton from "../../shared/components/PressableButton";
 import Toast from "react-native-toast-message";
 import LoadingModal from "../../shared/components/LoadingModal";
 
-const OtpScreen = () => {
-  const navigation = useNavigation();
-  const { phone, otpVerification } = useContext(AuthContext);
+const OtpScreen = ({ route, navigation }) => {
+  const { email = null, phoneNo=null } = route.params;
+  const { otpEmailVerify } = useContext(AuthContext);
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
 
@@ -53,10 +52,17 @@ const OtpScreen = () => {
     const otpValue = otp.join("");
     if (otpValue.length === 4) {
       // Perform your OTP verification logic here
-      console.log(parseInt(otpValue))
-      const response = await otpVerification(otpValue);
-      setLoading(false);
+      // console.log(parseInt(otpValue))
+      if(email){
+        const response = await otpEmailVerify(email, otpValue);
+        if(response && response.status === true) {
+          setLoading(false);
+          navigation.navigate("Login");
+        }
+        setLoading(false);
+      } else {}
     } else {
+      setLoading(false);
       Toast.show({
         type: "error",
         text1: "Invalid OTP",
@@ -91,14 +97,17 @@ const OtpScreen = () => {
         </View>
 
         <View style={styles.imageContainer}>
-          <Image source={OtpImage} style={styles.image} />
+          <Image source={Images.OtpImage} style={styles.image} />
         </View>
 
         <View style={styles.formContainer}>
           <Text style={styles.formHeader}>OTP Verification</Text>
-          <Text style={styles.formHeaderSecondary}>
-            Enter the Otp sent to +91-{phone ? phone : ''}
-          </Text>
+          { phoneNo ? (<Text style={styles.formHeaderSecondary}>
+            Enter the Otp sent to +91-{phoneNo ? phoneNo : ''}
+          </Text>) : 
+          (<Text style={styles.formHeaderSecondary}>
+            Enter the Otp sent to {email ? email : ''}
+          </Text>) }
 
           <View style={styles.otpContainer}>
             {otp.map((digit, index) => (

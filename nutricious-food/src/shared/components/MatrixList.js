@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   categoryText: {
     marginTop: wp(1),
     color: "#5c5b5b",
-    fontSize: wp(4),
+    fontSize: wp(3.5),
     lineHeight: 22,
   },
 });

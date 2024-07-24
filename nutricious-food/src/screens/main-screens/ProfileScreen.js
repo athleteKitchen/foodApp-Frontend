@@ -11,6 +11,7 @@ import {
 import PoppinsText from "../../shared/components/PoppinsText";
 import ProfileOption from "./Components/ProfileOption";
 import { LinearGradient } from "expo-linear-gradient";
+import LoadingModal from "../../shared/components/LoadingModal";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -21,7 +22,10 @@ const ProfileScreen = () => {
     setLoading(true);
     logout();
     setLoading(false);
-    navigation.navigate("Login");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "Login" }],
+    })
   };
 
   if (loading) {

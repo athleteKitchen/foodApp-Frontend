@@ -8,8 +8,25 @@ import {
   getTokens,
 } from "../configs/AxiosConfig";
 import Toast from "react-native-toast-message";
+import Urls from "../configs/ApiUrls";
+import MealsApis from "./MealApi";
+import { StyleSheet } from "react-native";
 
 export const AuthContext = createContext();
+
+const showToast = (type, text1, text2) => {
+  Toast.show({
+    type,
+    text1,
+    text2,
+  });
+};
+
+const styles = StyleSheet.create({
+  text2Style: {
+    color: "#1d1c1c",
+  },
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(false);
@@ -45,66 +62,83 @@ export const AuthProvider = ({ children }) => {
     setUserInfo(response.data);
   };
 
+  const checkIsMealPlanDone = async () => {
+    const result = await AsyncStorage.getItem("isMealPlanDone");
+    if (result === "" || result === null) {
+      try {
+        const response = await MealsApis.checkIsMealPlanDone();
+        if (typeof response.message === "boolean") {
+          await AsyncStorage.setItem(
+            "isMealPlanDone",
+            response.message.toString()
+          );
+          return response.message.toString();
+        }
+      } catch (err) {
+        showToast(
+          "error",
+          "Error",
+          "Some Problem Occurred, Please try later..."
+        );
+        return;
+      }
+    }
+    return result;
+  };
+
+  const handleLoginResponse = async (response, successMessage) => {
+    const { accessToken, refreshToken } = response.data;
+    if (accessToken) {
+      await setTokens(accessToken, refreshToken);
+      await setAuthorizationHeader();
+      setUser(true);
+      await AsyncStorage.setItem("isLoggedIn", "true");
+      checkIsMealPlanDone();
+      showToast("success", "Success", successMessage);
+      setLoading(false);
+      return { message: successMessage, isLoggedIn: true };
+    }
+  };
+
+  const handleError = (error, fallbackMessage) => {
+    const errorMessage =
+      error.response?.data?.error?.message ||
+      fallbackMessage ||
+      "An error occurred";
+    setMessage(errorMessage);
+    showToast("error", "Error", errorMessage);
+    setLoading(false);
+    return { message: errorMessage, isLoggedIn: false };
+  };
+
   const register = async (data) => {
     try {
-      const response = await api.post("/auth/register", data);
+      const response = await api.post(Urls.authEndpoint.register, data);
       const tokens = response.data;
       const { accessToken } = tokens;
       if (accessToken) {
         await AsyncStorage.setItem("isLoggedIn", "false");
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: "User registered successfully",
-        });
-        setLoading(false);
-        return { status: true };
+        showToast("success", "Success", "User registered successfully");
+        const otpResponse = await otpEmailRequest(data.email);
+        if (otpResponse.status === true) {
+          setLoading(false);
+          return { status: true };
+        }
       }
     } catch (error) {
-      setLoading(false);
-      setMessage("An error occurred");
-      if (error.response && error.response.data && error.response.data.error) {
-        setMessage(error.response.data.error.message);
-      }
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: message,
-      });
-      return { message: message, isLoggedIn: false };
+      console.log(error.response.data);
+      return handleError(error, "An error occurred");
     }
   };
 
   const login = async (data) => {
     try {
-      const response = await api.post("/auth/login", data);
-      const tokens = response.data;
-      const { accessToken, refreshToken } = tokens;
-      if (response && accessToken) {
-        await setTokens(accessToken, refreshToken);
-        await setAuthorizationHeader();
-        setUser(true);
-        await AsyncStorage.setItem("isLoggedIn", "true");
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: "Logged-In Successfully",
-        });
-        setLoading(false);
-        return { message: "Logged-In Successfully", isLoggedIn: "true" };
-      }
+      const response = await api.post(Urls.authEndpoint.login, data);
+      return await handleLoginResponse(response, "Logged-In Successfully");
     } catch (error) {
+      return handleError(error, "An error occurred");
+    } finally {
       setLoading(false);
-      setMessage("An error occurred");
-      if (error.response && error.response.data && error.response.data.error) {
-        setMessage(error.response.data.error.message);
-      }
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: message,
-      });
-      return { message: message, isLoggedIn: false };
     }
   };
 
@@ -113,29 +147,59 @@ export const AuthProvider = ({ children }) => {
       const tokens = await getTokens();
       const { refreshToken } = tokens;
 
-      if (tokens != null) {
-        await api.delete("/auth/logout", { data: { refreshToken } });
+      if (tokens) {
+        await api.delete(Urls.authEndpoint.logout, { data: { refreshToken } });
         removeTokens();
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: "Logged-Out Successfully",
-        });
+        await AsyncStorage.removeItem("isMealPlanDone");
+        showToast("success", "Success", "Logged-Out Successfully");
         setUser(null); // Update user state
       } else {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: "No refresh token found",
-        });
+        showToast("error", "Error", "No refresh token found");
       }
     } catch (err) {
       console.log("Logout error:", err);
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: err.message || "An error occurred",
+      showToast("error", "Error", err.message || "An error occurred");
+    }
+  };
+
+  const otpEmailRequest = async (email) => {
+    try {
+      const response = await api.post(Urls.authEndpoint.sendEmailOtp, {
+        email,
       });
+      if (response.data.success === true) {
+        showToast("success", "Success", "An OTP is sent to your E-Mail");
+        return { status: true };
+      }
+    } catch (err) {
+      showToast(
+        "error",
+        "Error",
+        err.response?.data?.error?.message || "An error occurred"
+      );
+      return { status: false };
+    }
+  };
+
+  const otpEmailVerify = async (email, otp) => {
+    try {
+      const response = await api.post(Urls.authEndpoint.verifyEmailOtp, {
+        email,
+        otp,
+      });
+      console.log(response);
+      const { success, payload } = response.data;
+      if (response.data.success === true) {
+        showToast("success", "Success", response.data.payload.message);
+        return { status: true };
+      }
+    } catch (err) {
+      showToast(
+        "error",
+        "Error",
+        err.response?.data?.error?.message || "An error occurred"
+      );
+      return { status: false };
     }
   };
 
@@ -143,43 +207,25 @@ export const AuthProvider = ({ children }) => {
     setPhone(number);
     console.log(number);
     try {
-      Toast.show({
-        type: "success",
-        text1: "Success",
-        text2: "OTP sent successfully",
-      });
+      showToast("success", "Success", "OTP sent successfully");
       return { status: true };
     } catch (err) {
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: "Failed to send OTP, please try later...",
-      });
+      showToast("error", "Error", "Failed to send OTP, please try later...");
       return { status: false };
     }
   };
 
   const updatePassword = async (data) => {
     try {
-      const response = await api.post("/auth/email/update/password", data);
+      const response = await api.post(Urls.authEndpoint.updatePassword, data);
       const { message } = response.data;
       if (message) {
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: message,
-        });
+        showToast("success", "Success", message);
         setEmail("");
         return { status: "success" };
       }
-      // return { status: "failed" };
     } catch (error) {
-      setMessage(error.response.data.error.message);
-      Toast.show({
-        type: "error",
-        text1: "Error",
-        text2: error.response.data.error.message || message || "An error occurred",
-      });
+      showToast("error", "Error", "An Error Occurred, Please try later...");
       return { status: "failed" };
     }
   };
@@ -187,29 +233,17 @@ export const AuthProvider = ({ children }) => {
   const forgotPasswordRequest = async (email) => {
     try {
       setEmail(email);
-      const response = await api.post("/auth/email/request/password", {
+      const response = await api.post(Urls.authEndpoint.forgotPasswordRequest, {
         email: email,
       });
       const { message } = response.data;
       if (message) {
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: message,
-        });
+        showToast("success", "Success", message);
         return { status: "success" };
       }
       return { status: "failed" };
     } catch (error) {
-      setMessage(error.response.data.error.message);
-      if (error) {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: message,
-        });
-      }
-      setLoading(false);
+      showToast("error", "Error", error.response.data.error.message);
       return {
         message: error.response.data.error.message,
       };
@@ -219,27 +253,18 @@ export const AuthProvider = ({ children }) => {
   const forgotPasswordVerify = async (data) => {
     try {
       // setEmail(email);
-      const response = await api.post("/auth/email/verify/password", data);
+      const response = await api.post(
+        Urls.authEndpoint.forgotPasswordVerify,
+        data
+      );
       const { message } = response.data;
       if (message) {
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: message,
-        });
+        showToast("success", "Success", message);
         return { status: "success" };
       }
       return { status: "failed" };
     } catch (error) {
-      setMessage(error.response.data.error.message);
-      if (error) {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: message,
-        });
-      }
-      setLoading(false);
+      showToast("error", "Error", error.response.data.error.message);
       return {
         message: error.response.data.error.message,
       };
@@ -249,22 +274,46 @@ export const AuthProvider = ({ children }) => {
   const refreshToken = async () => {
     try {
       const oldRefreshToken = await AsyncStorage.getItem("refresh-token");
-
-      const response = await api.post("/auth/refresh-token", {
+      const response = await api.post(Urls.authEndpoint.refreshToken, {
         oldRefreshToken,
       });
       const tokens = response.data;
-      const { accessToken, refreshToken } = tokens;
-
       await removeTokens();
-      await setTokens(accessToken, refreshToken);
+      await setTokens(tokens.accessToken, tokens.refreshToken);
       await setAuthorizationHeader();
     } catch (error) {
       console.error("Refresh token error:", error.message);
     }
   };
 
-  const otpVerification = async () => {}
+  const getIsLoggedIn = async () => {
+    const value = await AsyncStorage.getItem("isLoggedIn");
+    if (value === "true") {
+      try {
+        const refreshToken = await AsyncStorage.getItem("refresh-token");
+        const response = await api.post(Urls.authEndpoint.verifyRefreshToken, {
+          refreshToken,
+        });
+
+        if (response.data.success === true) {
+          return value;
+        }
+      } catch (error) {
+        showToast(
+          "error",
+          "Error",
+          error.response?.data?.error?.message ||
+            "This user is logged-in from another device"
+        );
+        return "false";
+      }
+    } else if (value === "" || value === null) {
+      showToast("error", "Error", "Please LogIn from single device only");
+      return "false";
+    }
+  };
+
+  const otpVerification = async () => {};
 
   return (
     <>
@@ -285,7 +334,11 @@ export const AuthProvider = ({ children }) => {
           otpVerification,
           forgotPasswordRequest,
           forgotPasswordVerify,
-          updatePassword
+          updatePassword,
+          checkIsMealPlanDone,
+          getIsLoggedIn,
+          otpEmailRequest,
+          otpEmailVerify,
         }}
       >
         {children}
