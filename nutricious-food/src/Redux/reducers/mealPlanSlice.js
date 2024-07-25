@@ -31,6 +31,9 @@ const mealPlanInputs = createSlice({
     setNonVegComfort: (state, action) => {
       state.nonVegComfort = action.payload;
     },
+    resetMealPlanInputs: (state) => {
+      return initialState;
+    },
   },
 });
 
@@ -40,7 +43,8 @@ export const {
   setProtein,
   setFitnessGoal,
   setVegNonVeg,
-  setNonVegComfort
+  setNonVegComfort,
+  resetMealPlanInputs
 } = mealPlanInputs.actions;
 
 export default mealPlanInputs.reducer;

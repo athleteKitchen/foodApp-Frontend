@@ -27,6 +27,7 @@ const removeTokens = async () => {
   await AsyncStorage.removeItem("access-token");
   await AsyncStorage.removeItem("refresh-token");
   await AsyncStorage.removeItem("isLoggedIn");
+  await AsyncStorage.removeItem("isMealPlanDone");
   await AsyncStorage.setItem("isLoggedIn", "false");
 };
 
@@ -62,7 +63,7 @@ const refreshTokenApi = async (token) => {
     Toast.show({
       type: "error",
       text1: "Error",
-      text2: "This User in LoggedIn in another device"
+      text2: error.response.data.error.message || "This User in LoggedIn in another device"
     })
   }
 };

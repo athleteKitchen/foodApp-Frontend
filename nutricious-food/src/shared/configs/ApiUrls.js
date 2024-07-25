@@ -9,7 +9,8 @@ const Urls = {
         refreshToken: "/auth-service/auth/refresh-token",
         verifyRefreshToken :"/auth-service/auth/verify-refresh-token",
         sendEmailOtp: "/auth-service/auth/email/request/otp",
-        verifyEmailOtp: "/auth-service/auth/email/verify/otp"
+        verifyEmailOtp: "/auth-service/auth/email/verify/otp",
+        userInfo: "/auth-service/user-info/user"
     },
     mealEndpoint: {
         checkIsMealPlanDone: "/auth-service/user-info/check-meal-plan",

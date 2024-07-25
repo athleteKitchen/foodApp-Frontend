@@ -6,11 +6,12 @@ import {
   setAddress, setCity, setDistrict, setLatitude, setLongitude, 
   setPostalCode, setStreet, setStreetNumber 
 } from "../../Redux/reducers/locationSlice";
+import { setEmail, setIsMealPlanDone, setMealPlan, setName, setPhone } from "../../Redux/reducers/userSlice";
 
 export const useInitApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { getIsLoggedIn } = useContext(AuthContext);
+  const { getIsLoggedIn, getUserInfo } = useContext(AuthContext);
   const dispatch = useDispatch();
 
   const getLocation = async () => {
@@ -26,15 +27,32 @@ export const useInitApp = () => {
       setLongitude(coords.longitude),
       setLatitude(coords.latitude)
     ];
-
     actions.forEach(dispatch);
   };
+
+  const getUserDetails = async () => {
+    try {
+      const response = await getUserInfo();
+      console.log(response.userInfo);
+      const actions = [
+        setName(response.userInfo.name),
+        setEmail(response.userInfo.email),
+        setPhone(response.userInfo.phone),
+        setIsMealPlanDone(response.userInfo.isMealPlanDone),
+        setMealPlan(response.userInfo.mealPlan)
+      ]
+      actions.forEach(dispatch);
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const val = await getIsLoggedIn();
         setIsLoggedIn(val);
+        if(val === "true") getUserDetails();
       } catch (error) {
         console.error("Error getting login status:", error);
       } finally {

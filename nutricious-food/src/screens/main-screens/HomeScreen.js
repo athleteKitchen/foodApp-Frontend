@@ -27,7 +27,7 @@ import Footer from "./Components/Footer";
 import { useSelector } from "react-redux";
 
 // Reusable Header Component
-const Header = ({ location, district }) => (
+const Header = ({ location, district, name }) => (
   <View style={styles.header}>
     <TouchableOpacity style={styles.locationContainer}>
       <FontAwesome name="map-marker" size={33} color="#25854d" />
@@ -40,21 +40,44 @@ const Header = ({ location, district }) => (
         </PoppinsText>
       </View>
     </TouchableOpacity>
-    <Greeting />
+    <Greeting name={name}/>
   </View>
 );
 
 // Reusable Greeting Component
-const Greeting = () => {
+const Greeting = ({ name }) => {
   const navigation = useNavigation();
+
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+    let greeting;
+
+    switch (true) {
+      case currentHour >= 0 && currentHour < 12:
+        greeting = 'Good Morning';
+        break;
+      case currentHour >= 12 && currentHour < 16:
+        greeting = 'Good Afternoon';
+        break;
+      case currentHour >= 16 && currentHour <= 19:
+        greeting = 'Good Evening';
+        break;
+      default:
+        greeting = 'Good Evening';
+        break;
+    }
+
+    return greeting;
+  };
+
   return(
   <View style={styles.profileContainer}>
     <View>
       <PoppinsText weight="600" style={styles.greetingText}>
-        Hi, Anis,
+        Hi, {name},
       </PoppinsText>
       <PoppinsText weight="400" style={styles.subGreetingText}>
-        Good Evening!
+        {getGreeting()}
       </PoppinsText>
     </View>
     <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
@@ -123,17 +146,18 @@ const HomeScreen = () => {
 
   const street = useSelector((state) => state.location.street);
   const streetNumber = useSelector((state) => state.location.streetNumber);
-  const district = useSelector((state) => state.location.district)
+  const district = useSelector((state) => state.location.district);
+  const name = useSelector((state) => state.userDetails.name);
 
   const shortAddr = `${streetNumber}, ${street}`;
 
   useEffect(() => {
-    if (street && streetNumber && district) {
+    if (street && streetNumber && district && name) {
       setLoading(false);
     } else {
       setLoading(true);
     }
-  }, [street, streetNumber, district]);
+  }, [street, streetNumber, district, name]);
   
   if (loading) {
     return (
@@ -149,7 +173,7 @@ const HomeScreen = () => {
         colors={["#ffecd2", "#fce39f"]}
         style={styles.linearGradient}
       >
-        <Header location={shortAddr} district={district} />
+        <Header location={shortAddr} district={district} name={name} />
         <CategoryTitle
           text="Find your Nutritious Meal"
           color="#25854d"

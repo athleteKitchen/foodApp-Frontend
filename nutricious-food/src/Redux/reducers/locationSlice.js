@@ -39,6 +39,9 @@ const locationStats = createSlice({
     setLatitude: (state, action) => {
       state.latitude = action.payload;
     },
+    resetLocation: (state) => {
+      return initialState;
+    }
   },
 });
 
@@ -51,6 +54,7 @@ export const {
   setDistrict,
   setLongitude,
   setLatitude,
+  resetLocation,
 } = locationStats.actions;
 
 export default locationStats.reducer;

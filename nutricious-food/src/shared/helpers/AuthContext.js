@@ -96,7 +96,7 @@ export const AuthProvider = ({ children }) => {
       checkIsMealPlanDone();
       showToast("success", "Success", successMessage);
       setLoading(false);
-      return { message: successMessage, isLoggedIn: true };
+      return { message: successMessage, isLoggedIn: "true" };
     }
   };
 
@@ -108,7 +108,7 @@ export const AuthProvider = ({ children }) => {
     setMessage(errorMessage);
     showToast("error", "Error", errorMessage);
     setLoading(false);
-    return { message: errorMessage, isLoggedIn: false };
+    return { message: errorMessage, isLoggedIn: "false" };
   };
 
   const register = async (data) => {
@@ -150,7 +150,6 @@ export const AuthProvider = ({ children }) => {
       if (tokens) {
         await api.delete(Urls.authEndpoint.logout, { data: { refreshToken } });
         removeTokens();
-        await AsyncStorage.removeItem("isMealPlanDone");
         showToast("success", "Success", "Logged-Out Successfully");
         setUser(null); // Update user state
       } else {
@@ -303,15 +302,33 @@ export const AuthProvider = ({ children }) => {
           "error",
           "Error",
           error.response?.data?.error?.message ||
-            "This user is logged-in from another device"
+            "Please LogIn from single device only"
         );
+        await logout()
         return "false";
       }
     } else if (value === "" || value === null) {
-      showToast("error", "Error", "Please LogIn from single device only");
+      // showToast("error", "Error", "Please LogIn from single device only");
       return "false";
     }
   };
+
+  const getUserInfo = async () => {
+    try {
+      const response = await api.get(Urls.authEndpoint.userInfo);
+      if (response.data.success === true) {
+        return response.data.payload;
+      }
+      return;
+    } catch (error) {
+      showToast(
+        "error",
+        "Error",
+        error.response?.data?.error?.message
+      );
+      return;
+    }
+  }
 
   const otpVerification = async () => {};
 
@@ -339,6 +356,7 @@ export const AuthProvider = ({ children }) => {
           getIsLoggedIn,
           otpEmailRequest,
           otpEmailVerify,
+          getUserInfo,
         }}
       >
         {children}
