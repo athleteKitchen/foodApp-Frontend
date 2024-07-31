@@ -34,13 +34,41 @@ const getLocationCoordsAsync = async () => {
   }
 };
 
-const getLocationAddressAsync = async (longitude, latitude) => {
-  const address = await Location.reverseGeocodeAsync({
-    longitude: longitude,
-    latitude: latitude,
-  });
+const getInputLocationCoordsAsync = async (address) => {
+  const status = await Location.hasServicesEnabledAsync();
+  if (status === true) {
+    try {
+      const geocodeResults = await Location.geocodeAsync(address);
+      if (geocodeResults.length > 0) {
+        const locationCoords = geocodeResults[0];
+        return {
+          longitude: locationCoords.longitude,
+          latitude: locationCoords.latitude,
+        };
+      } else {
+        throw new Error("No coordinates found for the provided address.");
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  } else {
+    await requestLocationAsync();
+    return null;
+  }
+};
 
-  return address;
+const getLocationAddressAsync = async (longitude, latitude) => {
+  try {
+    const address = await Location.reverseGeocodeAsync({
+      longitude: longitude,
+      latitude: latitude,
+    });
+    return address;
+  } catch (error) {
+    console.error(error)
+    return "Some error Occurred"
+  }
 };
 
 const getGeoLocationAsync = async () => {
@@ -58,12 +86,13 @@ const getGeoLocationAsync = async () => {
     await requestLocationAsync();
     return;
   }
-}
+};
 
 export {
   requestLocationAsync,
   registerForPushNotificationsAsync,
   getLocationCoordsAsync,
   getLocationAddressAsync,
-  getGeoLocationAsync
+  getGeoLocationAsync,
+  getInputLocationCoordsAsync,
 };

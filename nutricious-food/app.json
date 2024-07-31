@@ -16,6 +16,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.fitness.nutritiousfood",
+      "config": {
+        "googleMapsApiKey": "AIzaSyA_w1bAjSFezpcKgLEbGvLfqNVr2jWk_nY"
+      },
       "infoPlist": {
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location to provide better services.",
         "NSUserTrackingUsageDescription": "This app uses notifications to keep you informed."
@@ -27,6 +30,11 @@
         "backgroundColor": "#f5f5f5"
       },
       "package": "com.fitness.nutritiousfood",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyA_w1bAjSFezpcKgLEbGvLfqNVr2jWk_nY"
+        }
+      },
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",

@@ -27,22 +27,27 @@ import Footer from "./Components/Footer";
 import { useSelector } from "react-redux";
 
 // Reusable Header Component
-const Header = ({ location, district, name }) => (
-  <View style={styles.header}>
-    <TouchableOpacity style={styles.locationContainer}>
-      <FontAwesome name="map-marker" size={33} color="#25854d" />
-      <View style={styles.locationTextContainer}>
-        <PoppinsText weight="600" style={[styles.deliveryText]}>
-          {district}
-        </PoppinsText>
-        <PoppinsText weight="400" style={[styles.locationText]}>
-          {location}
-        </PoppinsText>
-      </View>
-    </TouchableOpacity>
-    <Greeting name={name}/>
-  </View>
-);
+const Header = ({ location, district, name, navigation }) => {
+  return (
+    <View style={styles.header}>
+      <TouchableOpacity
+        style={styles.locationContainer}
+        onPress={() => navigation.navigate("LocationDetails")}
+      >
+        <FontAwesome name="map-marker" size={33} color="#25854d" />
+        <View style={styles.locationTextContainer}>
+          <PoppinsText weight="600" style={[styles.deliveryText]}>
+            {district}
+          </PoppinsText>
+          <PoppinsText weight="400" style={[styles.locationText]}>
+            {location}
+          </PoppinsText>
+        </View>
+      </TouchableOpacity>
+      <Greeting name={name} />
+    </View>
+  );
+};
 
 // Reusable Greeting Component
 const Greeting = ({ name }) => {
@@ -54,37 +59,38 @@ const Greeting = ({ name }) => {
 
     switch (true) {
       case currentHour >= 0 && currentHour < 12:
-        greeting = 'Good Morning';
+        greeting = "Good Morning";
         break;
       case currentHour >= 12 && currentHour < 16:
-        greeting = 'Good Afternoon';
+        greeting = "Good Afternoon";
         break;
       case currentHour >= 16 && currentHour <= 19:
-        greeting = 'Good Evening';
+        greeting = "Good Evening";
         break;
       default:
-        greeting = 'Good Evening';
+        greeting = "Good Evening";
         break;
     }
 
     return greeting;
   };
 
-  return(
-  <View style={styles.profileContainer}>
-    <View>
-      <PoppinsText weight="600" style={styles.greetingText}>
-        Hi, {name},
-      </PoppinsText>
-      <PoppinsText weight="400" style={styles.subGreetingText}>
-        {getGreeting()}
-      </PoppinsText>
+  return (
+    <View style={styles.profileContainer}>
+      <View>
+        <PoppinsText weight="600" style={styles.greetingText}>
+          Hi, {name},
+        </PoppinsText>
+        <PoppinsText weight="400" style={styles.subGreetingText}>
+          {getGreeting()}
+        </PoppinsText>
+      </View>
+      <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+        <Image source={Images.Profile} style={styles.profileImage} />
+      </TouchableOpacity>
     </View>
-    <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-      <Image source={Images.Profile} style={styles.profileImage} />
-    </TouchableOpacity>
-  </View>
-)};
+  );
+};
 
 // Reusable SearchBar Component
 const SearchBar = () => (
@@ -158,7 +164,7 @@ const HomeScreen = () => {
       setLoading(true);
     }
   }, [street, streetNumber, district, name]);
-  
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -168,54 +174,61 @@ const HomeScreen = () => {
   }
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      <LinearGradient
-        colors={["#ffecd2", "#fce39f"]}
-        style={styles.linearGradient}
-      >
-        <Header location={shortAddr} district={district} name={name} />
-        <CategoryTitle
-          text="Find your Nutritious Meal"
-          color="#25854d"
-          fontSize={wp(6)}
-          weight="700"
-        />
-        <CategoryTitle
-          text="Stay Fit & Healthy"
-          color="#f1a706"
-          fontSize={wp(7)}
-          style={{ marginTop: -hp(3) }}
-          weight="500"
-          fontFamily="Poppins_500Medium"
-        />
-        <SearchBar />
-        <ButtonGroup />
-        <BannerComponent />
-      </LinearGradient>
-      <Text>{"\n"}</Text>
-      <CategoryTitle
-        text="EXPLORE MEALS"
-        color="#585858"
-        fontSize={wp(5)}
-        fontFamily="Inter_700Bold"
-      />
-      <View style={styles.underLine}></View>
-      <MatrixList data={meals} navigation={navigation} />
-      <Text>{"\n"}</Text>
-      <CategoryTitle
-        text="SPORT SPECIFIC NUTRITION"
-        color="#585858"
-        fontSize={wp(5)}
-        fontFamily="Inter_700Bold"
-      />
-      <View style={[styles.underLine, { backgroundColor: "#25854d" }]}></View>
-      <HorizontalList data={sports} navigation={navigation} />
-      <Footer />
-      <View>
+    <>
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+        <LinearGradient
+          colors={["#ffecd2", "#fce39f"]}
+          style={styles.linearGradient}
+        >
+          <Header
+            location={shortAddr}
+            district={district}
+            name={name}
+            navigation={navigation}
+          />
+          <CategoryTitle
+            text="Find your Nutritious Meal"
+            color="#25854d"
+            fontSize={wp(6)}
+            weight="700"
+          />
+          <CategoryTitle
+            text="Stay Fit & Healthy"
+            color="#f1a706"
+            fontSize={wp(7)}
+            style={{ marginTop: -hp(3) }}
+            weight="500"
+            fontFamily="Poppins_500Medium"
+          />
+          <SearchBar />
+          <ButtonGroup />
+          <BannerComponent />
+        </LinearGradient>
         <Text>{"\n"}</Text>
+        <CategoryTitle
+          text="EXPLORE MEALS"
+          color="#585858"
+          fontSize={wp(5)}
+          fontFamily="Inter_700Bold"
+        />
+        <View style={styles.underLine}></View>
+        <MatrixList data={meals} navigation={navigation} />
         <Text>{"\n"}</Text>
-      </View>
-    </ScrollView>
+        <CategoryTitle
+          text="SPORT SPECIFIC NUTRITION"
+          color="#585858"
+          fontSize={wp(5)}
+          fontFamily="Inter_700Bold"
+        />
+        <View style={[styles.underLine, { backgroundColor: "#25854d" }]}></View>
+        <HorizontalList data={sports} navigation={navigation} />
+        <Footer />
+        <View>
+          <Text>{"\n"}</Text>
+          <Text>{"\n"}</Text>
+        </View>
+      </ScrollView>
+    </>
   );
 };
 
@@ -229,7 +242,7 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   header: {
     flexDirection: "row",
@@ -239,6 +252,12 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
     top: hp(2),
     paddingVertical: hp(1),
+  },
+  detailsContainer: {
+    marginTop: 10,
+    padding: 20,
+    borderRadius: 25,
+    backgroundColor: "rgb(255, 253, 239)",
   },
   scrollView: {
     flex: 1,

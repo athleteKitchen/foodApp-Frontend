@@ -6,7 +6,15 @@ const api = axios.create({
   baseURL: "http://192.168.29.236:90",
 });
 
-const setAuthorizationHeader = async () => {
+const setAuthorizationHeader = async (token) => {
+  if (token) {
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common["Authorization"];
+  }
+};
+
+const setHeader = async () => {
   const token = await AsyncStorage.getItem("access-token");
   if (token) {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -26,7 +34,6 @@ const setAccessToken = async (token) => {
 const removeTokens = async () => {
   await AsyncStorage.removeItem("access-token");
   await AsyncStorage.removeItem("refresh-token");
-  await AsyncStorage.removeItem("isLoggedIn");
   await AsyncStorage.removeItem("isMealPlanDone");
   await AsyncStorage.setItem("isLoggedIn", "false");
 };
@@ -45,33 +52,35 @@ const getTokens = async () => {
     console.error("Error fetching tokens from AsyncStorage:", error);
     return { accessToken: null, refreshToken: null };
   }
-}
+};
 
 const refreshTokenApi = async (token) => {
   try {
-    const response = await api.post("/auth-service/auth/refresh-token", { token });
-    const tokens = response.data
-    const { accessToken, newRefreshToken } = tokens;
-
-    await removeTokens();
-    await setTokens(accessToken, newRefreshToken);
-
-    await setAuthorizationHeader();
+    const response = await api.post("/auth-service/auth/refresh-token", {
+      refreshToken: token,
+    });
+    const tokens = response.data;
+    console.log(tokens);
+    const { accessToken, refreshToken } = tokens;
+    api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    await AsyncStorage.setItem("access-token", accessToken);
+    await AsyncStorage.setItem("refresh-token", refreshToken);
   } catch (error) {
     console.error("This User is LoggedIn in another device:", error.message);
-    await AsyncStorage.removeItem('isLoggedIn');
     Toast.show({
       type: "error",
       text1: "Error",
-      text2: error.response.data.error.message || "This User in LoggedIn in another device"
-    })
+      text2:
+        error.response.data.error.message ||
+        "This User in LoggedIn in another device",
+    });
   }
 };
 
 // Add a request interceptor
 api.interceptors.request.use(
   async (config) => {
-    await setAuthorizationHeader();
+    await setHeader();
     return config;
   },
   (error) => {
@@ -79,27 +88,78 @@ api.interceptors.request.use(
   }
 );
 
-// Add a response interceptor
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
-      const refreshToken = await AsyncStorage.getItem("refresh-token");
-      if (refreshToken) {
-        try {
-          await refreshTokenApi(refreshToken);
-          // originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
-          return api(originalRequest);
-        } catch (refreshError) {
-          console.error("Interceptor Refresh token error:", refreshError);
-          // Handle refresh token error (e.g., logout user)
+
+      try {
+        const refreshToken = await AsyncStorage.getItem("refresh-token");
+        // console.log(refreshToken)
+        // if (refreshToken && refreshToken !== "") { }
+        const checkRefreshToken = await api.post(
+          "/auth-service/auth/verify-refresh-token",
+          {
+            refreshToken: refreshToken,
+          }
+        );
+        if (checkRefreshToken.data.success === true) {
+          const response = await api.post("/auth-service/auth/refresh-token", {
+            refreshToken,
+          });
+          if (response) {
+            const { accessToken, refreshToken } = response.data;
+
+            // Update the default headers with the new access token
+            api.defaults.headers.common[
+              "Authorization"
+            ] = `Bearer ${accessToken}`;
+
+            // Save the new tokens in AsyncStorage
+            await AsyncStorage.multiSet([
+              ["access-token", accessToken],
+              ["refresh-token", refreshToken],
+            ]);
+
+            // Update the original request with the new access token
+            originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
+
+            // Retry the original request
+            return api(originalRequest);
+          } else {
+            await AsyncStorage.multiRemove(["access-token", "refresh-token"]);
+            Toast.show({
+              type: "error",
+              text1: "Error",
+              text2: "Some Problem Occurred, Please try later...",
+            });
+            // return Promise.reject(error);
+          }
         }
+        await AsyncStorage.multiRemove(["access-token", "refresh-token"]);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "This User is LoggedIn in another device",
+        });
+
+        // If there's no valid refresh token, reject the promise
+        return Promise.reject(error);
+      } catch (refreshError) {
+        // Handle refresh token error, e.g., logout user
+        await AsyncStorage.multiRemove(["access-token", "refresh-token"]);
+        console.error("Interceptor Error:", refreshError.message);
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );

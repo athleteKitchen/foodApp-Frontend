@@ -11,6 +11,15 @@ import Toast from "react-native-toast-message";
 import Urls from "../configs/ApiUrls";
 import MealsApis from "./MealApi";
 import { StyleSheet } from "react-native";
+import { useDispatch } from "react-redux";
+import { resetLocation } from "../../Redux/reducers/locationSlice";
+import { resetMealPlanInputs } from "../../Redux/reducers/mealPlanSlice";
+import {
+  resetUserInfo,
+  setIsMealPlanDone,
+  setMealPlan,
+  setName,
+} from "../../Redux/reducers/userSlice";
 
 export const AuthContext = createContext();
 
@@ -19,6 +28,7 @@ const showToast = (type, text1, text2) => {
     type,
     text1,
     text2,
+    text2Style: styles.text2Style,
   });
 };
 
@@ -35,6 +45,7 @@ export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [phone, setPhone] = useState(0);
   const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loadStorageData = async () => {
@@ -90,10 +101,18 @@ export const AuthProvider = ({ children }) => {
     const { accessToken, refreshToken } = response.data;
     if (accessToken) {
       await setTokens(accessToken, refreshToken);
-      await setAuthorizationHeader();
-      setUser(true);
-      await AsyncStorage.setItem("isLoggedIn", "true");
-      checkIsMealPlanDone();
+      await setAuthorizationHeader(accessToken);
+      await checkIsMealPlanDone();
+      try {
+        const response = await getUserInfo();
+        dispatch(setName(response.userInfo.name));
+        dispatch(setEmail(response.userInfo.email));
+        dispatch(setPhone(response.userInfo.phone));
+        dispatch(setIsMealPlanDone(response.userInfo.isMealPlanDone));
+        dispatch(setMealPlan(response.userInfo.mealPlan));
+      } catch (error) {
+        console.error(error.message);
+      }
       showToast("success", "Success", successMessage);
       setLoading(false);
       return { message: successMessage, isLoggedIn: "true" };
@@ -150,6 +169,9 @@ export const AuthProvider = ({ children }) => {
       if (tokens) {
         await api.delete(Urls.authEndpoint.logout, { data: { refreshToken } });
         removeTokens();
+        dispatch(resetLocation());
+        dispatch(resetMealPlanInputs());
+        dispatch(resetUserInfo());
         showToast("success", "Success", "Logged-Out Successfully");
         setUser(null); // Update user state
       } else {
@@ -286,29 +308,24 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getIsLoggedIn = async () => {
-    const value = await AsyncStorage.getItem("isLoggedIn");
-    if (value === "true") {
-      try {
-        const refreshToken = await AsyncStorage.getItem("refresh-token");
+    try {
+      const value = await AsyncStorage.getItem("refresh-token");
+      console.log(value)
+      if (value !== null || value === "") {
         const response = await api.post(Urls.authEndpoint.verifyRefreshToken, {
-          refreshToken,
+          "refreshToken": value
         });
-
         if (response.data.success === true) {
-          return value;
+          return "true";
         }
-      } catch (error) {
-        showToast(
-          "error",
-          "Error",
-          error.response?.data?.error?.message ||
-            "Please LogIn from single device only"
-        );
-        await logout()
-        return "false";
       }
-    } else if (value === "" || value === null) {
-      // showToast("error", "Error", "Please LogIn from single device only");
+    } catch (error) {
+      showToast(
+        "error",
+        "Error",
+        error.response?.data?.error?.message
+      );
+      // await AsyncStorage.multiRemove(["access-token", "refresh-token"]);
       return "false";
     }
   };
@@ -321,14 +338,11 @@ export const AuthProvider = ({ children }) => {
       }
       return;
     } catch (error) {
-      showToast(
-        "error",
-        "Error",
-        error.response?.data?.error?.message
-      );
+      showToast("error", "Error", error.response?.data?.error?.message);
+      // await AsyncStorage.multiRemove(["access-token", "refresh-token"]);
       return;
     }
-  }
+  };
 
   const otpVerification = async () => {};
 

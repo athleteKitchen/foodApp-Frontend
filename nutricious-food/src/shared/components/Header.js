@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text, Platform } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import PoppinsText from "./PoppinsText";
 import {
@@ -16,7 +16,7 @@ const Header = ({ navigation, name, color, style, isCartIconShown, isBackIconSho
           alignItems: "center",
           justifyContent: "space-between",
           padding: wp(5),
-          marginTop: hp(3),
+          marginTop: Platform.OS === 'android' ? hp(2) : hp(3),
           paddingHorizontal: wp(6),
         },
         style
