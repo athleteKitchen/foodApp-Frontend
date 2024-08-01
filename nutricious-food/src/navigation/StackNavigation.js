@@ -21,13 +21,13 @@ import ProteinScreen from "../screens/meal-planning-screens/ProteinScreen";
 import FitnessGoalScreen from "../screens/meal-planning-screens/FitnessGoalScreen";
 import VegNonVegScreen from "../screens/meal-planning-screens/VegNonVegScreen";
 import MealPrepLoading from "../screens/meal-planning-screens/MealPrepLoading";
+import LocationDetails from "../screens/location-screens/LocationDetails";
 import LoadingModal from "../shared/components/LoadingModal";
 import { useInitApp } from "../shared/hooks/useInitApp";
 import { useFontsLoaded } from "../shared/hooks/useFontsLoaded";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import MapView from "../screens/location-screens/MapView";
-import LocationDetails from "../screens/location-screens/LocationDetails";
 
 enableScreens();
 
@@ -55,8 +55,12 @@ const screens = [
   { name: "FitnessGoal", component: FitnessGoalScreen },
   { name: "VegNonVeg", component: VegNonVegScreen },
   { name: "MealPlanLoading", component: MealPrepLoading },
-  { name: "MapView", component: MapView},
-  { name: "LocationDetails", component: LocationDetails, animation: "slide_from_bottom" }
+  { name: "MapView", component: MapView },
+  {
+    name: "LocationDetails",
+    component: LocationDetails,
+    animation: "slide_from_bottom",
+  },
 ];
 
 const StackNavigation = () => {
@@ -92,7 +96,14 @@ const StackNavigation = () => {
           }}
         >
           {screens.map((screen) => (
-            <Stack.Screen key={screen.name} name={screen.name} component={screen.component} options={{ animation: screen.animation ? screen.animation : "default" }} />
+            <Stack.Screen
+              key={screen.name}
+              name={screen.name}
+              component={screen.component}
+              options={{
+                animation: screen.animation ? screen.animation : "default",
+              }}
+            />
           ))}
         </Stack.Navigator>
       </NavigationContainer>
